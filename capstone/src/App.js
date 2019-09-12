@@ -36,7 +36,7 @@ function App() {
   //useSelector(state => state.any reducer that is in your combineReducer function in your reducer folder(located in index.js))
   //useDispatch() allows us to call functions from the actions folders that are in index.js
 
-  const counter = useSelector(state => state.countReducer); 
+  const counter = useSelector(state => state.counterReducer);
   const dispatch = useDispatch();                      
   
   //***** keep in mind anything in the return() is rendered, even comments ***** //
