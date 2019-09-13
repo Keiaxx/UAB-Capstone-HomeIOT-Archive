@@ -30,6 +30,23 @@ import './App.css';
 //these are the exported functions that are called from below 
 import {increment, decrement} from './actions';
 
+//Material components
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from './components/AppBar';
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+  input: {
+    display: 'none',
+  },
+}));
+
 //main
 function App() {
 
@@ -41,15 +58,25 @@ function App() {
   
   //***** keep in mind anything in the return() is rendered, even comments ***** //
 
-  
+  const classes = useStyles();
   //so dispatch is called with the increment() that is in the actions index.js
   //same for decrement()
   return (
-    <div className="showcase">
-      <h1>Counter {counter}</h1>
-      <button onClick={() => dispatch(increment(5))}>+</button>
-      <button onClick={() => dispatch(decrement())}>-</button> 
-    </div>
+    <Container fixed maxWidth='false'>
+      <AppBar/>
+      <br/>
+      <br/>
+      <Box my={4}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Counter {counter}
+        </Typography>
+        <div className="showcase">
+          <Button variant="contained"  onClick={() => dispatch(increment(5))} color="primary" className={classes.button}>+</Button>
+          <Button variant="contained"  onClick={() => dispatch(decrement())} color="primary" className={classes.button}>-</Button>
+
+        </div>
+      </Box>
+    </Container>
   );
 }
 

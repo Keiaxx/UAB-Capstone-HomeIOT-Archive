@@ -7,6 +7,11 @@ import { createStore } from 'redux';
 import allReducers from './reducers';
 import { Provider } from 'react-redux'; //connects global state (store) to our app
 
+// Material-UI theme
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/styles';
+import theme from './theme';
+
 /*the following is react-redux*/
 const store = createStore(
     allReducers,
@@ -15,8 +20,11 @@ const store = createStore(
 
 //Provider's prop store takes one param, store = {**your allReducers** which is saved in this app as store}
 ReactDOM.render(
-    <Provider store ={store}> 
-        <App/>
-    </Provider>,
+  <ThemeProvider theme={theme}>
+    <Provider store={store}>
+      <CssBaseline />
+      <App/>
+    </Provider>
+  </ThemeProvider>,
     document.getElementById('root')
 );
