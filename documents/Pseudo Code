@@ -1,0 +1,20 @@
+Overview of code and their files
+  src
+    actions
+      index.js  -------------> holds exported functions with their types 
+    components
+        AppBar.js  ----------> basic styling of the nav bar
+        dashboard.js  -------> holds inside and outside temps and layout of house
+        manualButtons.js  ---> allows for manual interactions of sensors
+        stats.js  -----------> usage reports for power, water, est. stats
+    reducers
+      counter.js  -----------> actions to increase or decreases the counter state
+      index.js    -----------> combines all individual reducers
+    App.js        -----------> where "main" is located, calls components to be rendered 
+    index.js      -----------> holds the store and the allReducers so state can be accessed anywhere in app
+    
+    /***********************************************************************************************************/
+    
+    detailed section of psudo code components and their functions
+    
+    
