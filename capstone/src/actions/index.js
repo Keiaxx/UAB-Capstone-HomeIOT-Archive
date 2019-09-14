@@ -17,3 +17,19 @@ export const decrement = () => {
         type: 'DECREMENT'
     };
 };
+
+/*
+houseTemp will display inside temp of house and outsideTemp is outside temp
+this may change bc the information may be pulled from the data base
+*/
+export const houseTemp = () => {
+    return {
+        type: 'INSIDE'
+    };
+};
+
+export const outsideTemp = () => {
+    return {
+        type: 'OUTSIDE'
+    };
+};
