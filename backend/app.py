@@ -10,12 +10,15 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 # Import SQL ORM and database extension
 from flask_sqlalchemy import SQLAlchemy
 from extensions.database import db
+from models.location import Location
+from models.device import Device
+from models.eventlog import EventLog
+from models.usage import Usage
 
 # Import API definitions/views
 from views.api import apiv1
 from views.locations import api as locationApi
 from views.devices import api as deviceApi
-
 
 def register_extensions(app):
     db.init_app(app)
