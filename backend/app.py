@@ -14,6 +14,7 @@ from extensions.database import db
 # Import API definitions/views
 from views.api import apiv1
 from views.locations import api as locationApi
+from views.devices import api as deviceApi
 
 
 def register_extensions(app):

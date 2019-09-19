@@ -2,13 +2,12 @@
 # If you worked on this file, add your name above so we can keep track of contributions
 
 from models.location import Location
-from extensions.database import db
+from extensions.database import db, commit
 
 
 def add_location(name):
     newloc = Location(name)
-    db.session.add(newloc)
-    db.session.commit()
+    commit(newloc)
     return newloc
 
 

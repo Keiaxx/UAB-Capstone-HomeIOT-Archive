@@ -11,4 +11,4 @@ api = Api(apiv1, version='1.0', title='HomeIOT API',
 
 # Define namespaces
 locations_ns = api.namespace('locations', 'Location methods')
-stats_ns = api.namespace('stats', 'Stats methods')
+devices_ns = api.namespace('devices', 'Device methods')

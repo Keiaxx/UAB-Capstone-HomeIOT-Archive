@@ -5,20 +5,19 @@ from flask_restplus import Resource, fields
 from views.api import api, locations_ns
 from dao.location import get_locations
 
-loc_fields = {
+loc_schema = {
     'locationId': fields.Integer(readonly=True, description='The unique location id'),
     'name': fields.String(required=True, description='The unique location name')
 }
 
-loc = api.model('Location', loc_fields)
-
+loc_model = api.model('Location', loc_schema)
 
 @locations_ns.route('/')
 class Location(Resource):
     '''Gets a list of all available locations'''
 
-    @api.doc(description='Get a list of stats')
-    @api.marshal_with(loc)
+    @api.doc(description='Get a list of locations')
+    @api.marshal_with(loc_model)
     def get(self):
         '''List all locations'''
         return get_locations()

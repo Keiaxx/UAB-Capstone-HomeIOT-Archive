@@ -3,3 +3,9 @@
 
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
+
+
+def commit(commitobject):
+    db.session.add(commitobject)
+    db.se
+    db.session.commit()
