@@ -32,8 +32,8 @@ if __name__ == "__main__":
     # UAB POSTGRES
     # TODO: Connect PostgreSQL
     basedir = os.path.abspath(os.path.dirname(__file__))
-    if os.path.exists(os.path.join(basedir, "../homeiot.db")):
-        os.remove(os.path.join(basedir, "../homeiot.db"))
+    if os.path.exists(os.path.join(basedir, "homeiot.db")):
+        os.remove(os.path.join(basedir, "homeiot.db"))
 
     # Run this file directly to create the database tables.
     print("Initializing Database")
