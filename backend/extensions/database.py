@@ -7,5 +7,4 @@ db = SQLAlchemy()
 
 def commit(commitobject):
     db.session.add(commitobject)
-    db.se
     db.session.commit()
