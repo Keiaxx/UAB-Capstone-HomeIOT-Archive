@@ -2,6 +2,7 @@
 # If you worked on this file, add your name above so we can keep track of contributions
 
 from extensions.database import db
+from datetime import datetime
 
 
 class Usage(db.Model):
@@ -17,7 +18,7 @@ class Usage(db.Model):
     def __repr__(self):
         return f'<Usage | Type: {self.type}>'
 
-    def __init__(self, device, date, type, data):
+    def __init__(self, device: 'Device', date: datetime, type: str, data: int):
         self.device = device
         self.date = date
         self.type = type
