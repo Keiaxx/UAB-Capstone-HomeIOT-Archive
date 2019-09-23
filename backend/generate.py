@@ -11,6 +11,9 @@ from datetime import datetime, timedelta
 
 # Import SQL Models
 from models.location import Location
+from models.device import Device
+from models.eventlog import EventLog
+from models.usage import Usage
 
 # Import DAO Helpers
 # If you don't know, DAO = Data Access Object
