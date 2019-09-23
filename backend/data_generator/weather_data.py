@@ -22,10 +22,10 @@ and state_name.
 place = Location(city_name,state_name)
 """
 class Location():
-    def __init__(self, city_name:  str, state_name: str):
+    def __init__(self, city_name:  str, state_name: str, key: str):
         self.city_name =city_name
         self.state_name = state_name
-
+        self.key = key
         
     """
     CAll this function to get
@@ -57,8 +57,7 @@ class Location():
     def one_day_temp(self, date):
         lat=  self.latitude()
         long = self.longitude()
-        key = "Add the API key of darksky here"
-        PLACE = key, lat, long
+        PLACE = self.key, lat, long
         yy = date.year
         mm = date.month
         dd = date.day
@@ -81,8 +80,7 @@ class Location():
     def one_hour_temp(self, date, hour) -> float:
         lat =  self.latitude()
         long = self.longitude()
-        key = "Add the API key of darksky here"
-        PLACE = key, lat, long
+        PLACE = self.key, lat, long
         yy = date.year
         mm = date.month
         dd = date.day
@@ -91,7 +89,19 @@ class Location():
         place = forecast(*PLACE, time=t)
         return place.hourly[hour].temperature
 
-    
+    """
+    This will provide current tempreature 
+    of the a specific place.
+    """
+    def current_temp(self):
+        lat =  self.latitude()
+        long = self.longitude()
+        PLACE = self.key, lat, long
+        now = dt.now()
+        t = dt(now.year,now.month, now.day, now.hour).isoformat()
+        place = forecast(*PLACE, time=t)
+        return place['currently']['temperature']
+
     """
     This methode is used to
     change the location.
@@ -99,7 +109,5 @@ class Location():
     def change_city(self,city_name, state_name):
         self.city_name =city_name2w
         self.state_name =state_name
-
-    
 
     
