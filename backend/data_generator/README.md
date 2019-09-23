@@ -16,7 +16,11 @@ geopy
 darkskylib 0.3.91
 ```
 ## Before runnig weather_data.py
-```key = "Add the API key of darksky here"``` Just make to change this and give the key that is in your darksky account. If you cannot find it just press `console` 
+Just make sure to change this 
+```
+key = "Add the API key of darksky here"
+```  
+and give the key that is in your darksky account. If you cannot find it just press `console` 
 and the it will be under `your secret key`.
 
 
