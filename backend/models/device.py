@@ -92,6 +92,7 @@ class HVAC(Electric):
     __mapper_args__ = {
         'polymorphic_identity': 'hvac'
     }
+    set_f = db.Column(db.INTEGER, default=0)
     high_f = db.Column(db.INTEGER, default=0)
     low_f = db.Column(db.INTEGER, default=0)
     ext_f = db.Column(db.INTEGER, default=0)

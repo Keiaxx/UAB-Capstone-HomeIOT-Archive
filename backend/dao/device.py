@@ -138,19 +138,22 @@ def add_hvac(location: Location, name: str, wattage: int) -> HVAC:
     return newhvac
 
 
-def set_hvac_params(hvacsystem: HVAC, high_f: int, low_f: int, int_f: int, ext_f: int) -> None:
+def set_hvac_params(hvacsystem: HVAC, set_f:int, high_f: int, low_f: int, int_f: int, ext_f: int) -> None:
     """
 
     :param hvacsystem:
-    :param high_f:
-    :param low_f:
-    :param int_f:
-    :param ext_f:
+    :param set_f The temperature in degrees F to set the house to
+    :param high_f: The temperature in degrees to automatically switch to COOL
+    :param low_f: The temperature in degrees to automatically switch to HEAT
+    :param int_f: The temperature of the house in F
+    :param ext_f: The temperature of outside in F
     :return:
     """
     # Ensure high temp is not less than low temp
     assert high_f > low_f
+    assert high_f > set_f and set_f > low_f
 
+    hvacsystem.set_f = set_f
     hvacsystem.int_f = int_f
     hvacsystem.ext_f = ext_f
     hvacsystem.high_f = high_f
