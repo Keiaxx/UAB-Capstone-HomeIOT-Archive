@@ -13,7 +13,7 @@ from datetime import date
 from geopy.geocoders import Nominatim
 import certifi
 import ssl
-
+from timeutils import to_hours
 
 """
 Make an instance of this
@@ -21,7 +21,7 @@ with two atributes city_name
 and state_name.
 place = Location(city_name,state_name)
 """
-class Location():
+class City_location():
     def __init__(self, city_name:  str, state_name: str, key: str):
         self.city_name =city_name
         self.state_name = state_name
@@ -107,7 +107,10 @@ class Location():
     change the location.
     """
     def change_city(self,city_name, state_name):
-        self.city_name =city_name2w
+        self.city_name =city_name
         self.state_name =state_name
 
-    
+a = datetiem(19, 9, 7, 6, 30) - datetime(19, 9, 7,7,00)
+print(a)
+print(to_hours(a))
+  
