@@ -14,9 +14,9 @@ import theme from './theme';
 
 /*the following is react-redux*/
 const store = createStore(
-    allReducers,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-    );
+  allReducers,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  );
 
 //Provider's prop store takes one param, store = {**your allReducers** which is saved in this app as store}
 ReactDOM.render(

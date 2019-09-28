@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ButtonAppBar from './AppBar';
 
-function dashBoard() {
+function Dashboard() {
   
   const dispatch = useDispatch();
   
@@ -10,9 +10,9 @@ function dashBoard() {
   return (
     <div className='LeaderBoard'>
       <ButtonAppBar/>
-            
+         
     </div>
   );
 }
 
-export default dashBoard;
+export default Dashboard;

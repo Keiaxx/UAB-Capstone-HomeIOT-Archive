@@ -15,20 +15,25 @@ setup for this app is as below:
     components    -> currently holds nothing
     reducers
       counter.js  -> actions to increase or decreases the counter state
-      index.js    -> combines all individual reducers
+      index.js    -> combines all individual reducers now in App.js
     App.js        -> where "main" is located, calls components to be rendered 
     index.js      -> holds the store and the allReducers so state can be accessed anywhere in app
 */  
 
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, {Fragment} from 'react';
+import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 // Redux
-import { Provider, useSelector, useDispatch } from 'react-redux';
+import { Provider, useSelector, useDispatch } from 'react-redux'; //connects global state (store) to our app
+import allReducers from './reducers';
+import { createStore } from 'redux';
 import './App.css';
 
 //these are the exported functions that are called from below 
 import {increment, decrement} from './actions';
+import Dashboard from './components/dashboard';
+import manualButtons from './components/manuaButtons';
+import Stats from './components/stats';
 
 //Material components
 import Button from '@material-ui/core/Button';
@@ -62,21 +67,30 @@ function App() {
   //so dispatch is called with the increment() that is in the actions index.js
   //same for decrement()
   return (
-    <Container fixed maxWidth='false'>
-      <AppBar/>
-      <br/>
-      <br/>
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Counter {counter}
-        </Typography>
-        <div className="showcase">
-          <Button variant="contained"  onClick={() => dispatch(increment(5))} color="primary" className={classes.button}>+</Button>
-          <Button variant="contained"  onClick={() => dispatch(decrement())} color="primary" className={classes.button}>-</Button>
+      <Container fixed maxWidth='false'>
+        <AppBar/>
+        <br/>
+        <br/>
+        <Box my={4}>
+          <Typography variant="h4" component="h1" gutterBottom>
+            Counter {counter}
+          </Typography>
+          <div className="showcase">
+            <Button variant="contained"  onClick={() => dispatch(increment(5))} color="primary" className={classes.button}>+</Button>
+            <Button variant="contained"  onClick={() => dispatch(decrement())} color="primary" className={classes.button}>-</Button>
+          </div>
+        </Box>
 
-        </div>
-      </Box>
-    </Container>
+        <Router>
+        <Fragment>
+          <Switch>
+            <Route exact path ='/' component={Dashboard} />
+            <Route exact path='/manualButtons' component={manualButtons} />
+          </Switch>
+        </Fragment>
+      </Router>
+      
+      </Container>
   );
 }
 

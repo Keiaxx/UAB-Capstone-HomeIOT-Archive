@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-function stats() {
+function Stats() {
   
   return (
     <div className='statsBoard'>
@@ -11,4 +11,4 @@ function stats() {
   );
 }
 
-export default stats;
+export default Stats;
