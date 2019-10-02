@@ -9,7 +9,7 @@ class EventLog(db.Model):
     eventId = db.Column(db.Integer, primary_key=True)
     deviceId = db.Column(db.Integer, db.ForeignKey("device.deviceId"))
     date = db.Column(db.DATETIME, nullable=False)
-    state = db.Column(db.Enum('ON', 'OFF', 'OFFLINE', 'ERROR'), default='OFF', nullable=False)
+    state = db.Column(db.Enum('OPENDOOR', 'CLOSEDOOR' ,'OPENWINDOW', 'CLOSEWINDOW','ON', 'OFF', 'OFFLINE', 'ERROR'), default='OFF', nullable=False)
 
     device = db.relationship("Device", back_populates="events")
 

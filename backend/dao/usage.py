@@ -17,6 +17,7 @@ def add_usage(device: Device, date, type: str, data: int) -> Usage:
     assert data > 0
 
     usageData = Usage(device, date, type, data)
+    
     commit(usageData)
     return usageData
 
