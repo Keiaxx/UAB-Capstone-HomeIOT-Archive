@@ -248,6 +248,7 @@ if __name__ == "__main__":
             temp = birmingham.one_day_temp(given_date)
             int_temp = random.randint(s-2,s+2) 
             times = 0
+            usage =0
             for x in range(24):
                 out_temp = temp[x+1]
                 for m in range(60):
@@ -258,14 +259,16 @@ if __name__ == "__main__":
                     if int_temp == h or int_temp >= h or int_temp == l or int_temp <= l:
                         times = abs(s - h)
                     if times != 0:
-                        usage = general_eq(3500,timedelta(minutes = 1))
+                        usage += general_eq(3500,timedelta(minutes = 1))
                         edao.add_event(main_hvac,"ON",dates)
                         edao.add_event(main_hvac,"OFF",dates+timedelta(minutes =1))
-                        udao.add_usage(main_hvac, dates, "electric", usage/1000)
                         int_temp = get_new_HVAC_temperature(int_temp, s)
-                        times =-1
-
-
+                        times -=1
+                if usage != 0:
+                    udao.add_usage(main_hvac, dates, "electric", usage/1000)
+                usage = 0
+                
+                    
         #TODO: Living room historical data generation
         living_room = ldao.add_location('Living room')
         livingroom_tv = ddao.add_electric_device(living_room, "living_room_tv", 636)
