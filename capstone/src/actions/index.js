@@ -18,18 +18,17 @@ export const decrement = () => {
     };
 };
 
-/*
-houseTemp will display inside temp of house and outsideTemp is outside temp
-this may change bc the information may be pulled from the data base
-*/
-export const houseTemp = () => {
-    return {
-        type: 'INSIDE'
-    };
-};
-
-export const outsideTemp = () => {
-    return {
-        type: 'OUTSIDE'
-    };
+export const turn = (name, check) => {
+    if(check == 0){
+        return {
+            type: 'TURNON',
+            payload: name
+        };
+    }
+    else{
+        return {
+            type: 'TURNOFF',
+            payload: name
+        };
+    }
 };

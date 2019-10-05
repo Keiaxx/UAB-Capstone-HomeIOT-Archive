@@ -24,16 +24,14 @@ import React, {Fragment} from 'react';
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 // Redux
-import { Provider, useSelector, useDispatch } from 'react-redux'; //connects global state (store) to our app
-import allReducers from './reducers';
-import { createStore } from 'redux';
+import { useSelector, useDispatch } from 'react-redux'; //connects global state (store) to our app
 import './App.css';
 
 //these are the exported functions that are called from below 
 import {increment, decrement} from './actions';
 import Dashboard from './components/dashboard';
 import manualButtons from './components/manuaButtons';
-import Stats from './components/stats';
+
 
 //Material components
 import Button from '@material-ui/core/Button';
@@ -43,6 +41,14 @@ import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from './components/AppBar';
 
+/*
+<Box my={4}>
+<div className="showcase">
+  <Button variant="contained"  onClick={() => dispatch(increment(5))} color="primary" className={classes.button}>+</Button>
+  <Button variant="contained"  onClick={() => dispatch(decrement())} color="primary" className={classes.button}>-</Button>
+</div>
+</Box>
+*/
 const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1),
@@ -70,17 +76,9 @@ function App() {
       <Container fixed maxWidth='false'>
         <AppBar/>
         <br/>
+        <br/>       
         <br/>
-        <Box my={4}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Counter {counter}
-          </Typography>
-          <div className="showcase">
-            <Button variant="contained"  onClick={() => dispatch(increment(5))} color="primary" className={classes.button}>+</Button>
-            <Button variant="contained"  onClick={() => dispatch(decrement())} color="primary" className={classes.button}>-</Button>
-          </div>
-        </Box>
-
+        <br/>
         <Router>
         <Fragment>
           <Switch>
@@ -89,7 +87,7 @@ function App() {
           </Switch>
         </Fragment>
       </Router>
-      
+
       </Container>
   );
 }
