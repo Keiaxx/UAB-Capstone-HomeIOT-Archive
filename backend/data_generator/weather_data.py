@@ -13,7 +13,7 @@ from datetime import date
 from geopy.geocoders import Nominatim
 import certifi
 import ssl
-from timeutils import to_hours
+
 
 """
 Make an instance of this
@@ -56,15 +56,15 @@ class City_location():
     """
     def one_day_temp(self, date):
         lat=  self.latitude()
-        long = self.longitude()
-        PLACE = self.key, lat, long
+        longi = self.longitude()
+        PLACE = self.key, lat, longi
         yy = date.year
         mm = date.month
         dd = date.day
         hh = date.hour
         t = dt(yy,mm, dd, hh).isoformat()
         place = forecast(*PLACE, time=t)
-        a = [hour.temperature for hour in place.hourly[:2]]
+        a = [hour.temperature for hour in place.hourly[:24]]
         data ={}
         b =1
         for x in range(len(a)):
@@ -79,12 +79,15 @@ class City_location():
     """
     def one_hour_temp(self, date, hour) -> float:
         lat =  self.latitude()
-        long = self.longitude()
-        PLACE = self.key, lat, long
+        longi = self.longitude()
+        PLACE = self.key, lat, longi
+
         yy = date.year
         mm = date.month
         dd = date.day
         hh = hour
+        print(self.key, lat, longi, yy, mm, dd, hh)
+        print(dt(yy, mm, dd, hh))
         t = dt(yy,mm, dd, hh).isoformat()
         place = forecast(*PLACE, time=t)
         return place.hourly[hour].temperature
@@ -109,8 +112,9 @@ class City_location():
     def change_city(self,city_name, state_name):
         self.city_name =city_name
         self.state_name =state_name
+ 
+a = City_location("Birmingham", "Alabama","61ddd4b2d1917d2d18707c527467ad92")
+temp = a.one_day_temp(dt(2019, 9, 25))
+print(temp[4])
 
-a = datetiem(19, 9, 7, 6, 30) - datetime(19, 9, 7,7,00)
-print(a)
-print(to_hours(a))
-  
+

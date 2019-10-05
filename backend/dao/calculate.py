@@ -1,5 +1,5 @@
 from datetime import timedelta
-from timeutils import to_hours
+from .timeutils import to_hours
 
 
 def get_new_interior_temperature(indoor_temperature: float,
@@ -24,7 +24,7 @@ def get_new_HVAC_temperature(indoor_temperature: float,
                              preset_temperature: float) -> float:
     temp_diff = preset_temperature - indoor_temperature
     if abs(temp_diff) < 1.0:
-        return indoor_temperature
+        return indoor_temperature  
     return indoor_temperature + 1 if temp_diff >= 0 else indoor_temperature - 1
 
 
