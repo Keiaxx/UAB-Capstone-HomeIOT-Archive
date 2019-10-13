@@ -4,7 +4,7 @@ import App from './App';
 import { createStore } from 'redux';
 
 //
-import allReducers from './reducers';
+import reducer from './reducers/switch';
 import { Provider } from 'react-redux'; //connects global state (store) to our app
 
 // Material-UI theme
@@ -14,7 +14,7 @@ import theme from './theme';
 
 /*the following is react-redux*/
 const store = createStore(
-  allReducers,
+  reducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
 

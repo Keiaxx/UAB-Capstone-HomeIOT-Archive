@@ -5,30 +5,23 @@ if there is an arguement payload is that variable passed
 it can be whatever, in this case it is just nr
 */ 
 
-export const increment = (nr) => {
-    return {
-        type: 'INCREMENT',
-        payload: nr
-    };
-};
-
-export const decrement = () => {
-    return {
-        type: 'DECREMENT'
-    };
-};
-
-export const turn = (name, check) => {
-    if(check == 0){
-        return {
-            type: 'TURNON',
-            payload: name
-        };
-    }
-    else{
-        return {
-            type: 'TURNOFF',
-            payload: name
-        };
+export const turn = (status) => {
+    switch(status){
+        case "TURNED_ON_OVEN":
+            return{
+                type:"OVEN_ON",
+            }
+        case "TURNED_OFF_OVEN":
+            return{
+                type:"OVEN_OFF"
+            }
+            
+        case"FRONT_DOOR_ON":
+            return{
+                type:"FRONT_DOOR_ON",
+            }
+            
+        default:
+            
     }
 };

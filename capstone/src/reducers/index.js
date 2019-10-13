@@ -1,5 +1,5 @@
 import counterReducer from './counter';
-import changeLights from './switch';
+import reducer from './switch';
 import {combineReducers} from 'redux'; 
 
 // line 1 of this page brings in counterReducers from the file counter
@@ -7,7 +7,7 @@ import {combineReducers} from 'redux';
 
 const allReducers = combineReducers({
     counterReducer,
-    changeLights
+    reducer
 });
 
 export default allReducers; //-> export this object so the store as access to it
