@@ -32,7 +32,7 @@ device_model = api.model('Device', {
 
 
 
-@devices_ns.route('/')
+@devices_ns.route('')
 class Device(Resource):
     '''Gets a list of all available devices'''
     @api.doc(description='Get a list of devices')

@@ -12,7 +12,7 @@ loc_schema = {
 
 loc_model = api.model('Location', loc_schema)
 
-@locations_ns.route('/')
+@locations_ns.route('')
 class Location(Resource):
     '''Gets a list of all available locations'''
 

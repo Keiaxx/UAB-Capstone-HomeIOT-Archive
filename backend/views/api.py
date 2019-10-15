@@ -10,6 +10,6 @@ api = Api(apiv1, version='1.0', title='HomeIOT API',
           description='The HomeIOT Application REST API for CS499 Team 5')
 
 # Define namespaces
-locations_ns = api.namespace('locations', 'Location methods')
-devices_ns = api.namespace('devices', 'Device methods')
+locations_ns = api.namespace('location', 'Location methods')
+devices_ns = api.namespace('device', 'Device methods')
 usage_ns = api.namespace('usage', 'Device usage information')
