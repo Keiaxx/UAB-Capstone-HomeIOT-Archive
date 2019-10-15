@@ -9,6 +9,13 @@ verify_ssl = true
 flask = "*"
 flask-restplus = "*"
 flask-sqlalchemy = "*"
+python-dateutil = "*"
+darkskylib = "*"
+geopy = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+api = "python app.py"
+generate = "python generate.py"
