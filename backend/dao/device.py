@@ -194,3 +194,11 @@ def get_device_by_id(did: int) -> Device:
     """
     return Device.query.filter(Device.deviceId == did).first()
 
+
+def set_device_state(did: int, state: str) -> bool:
+    try:
+        Device.query.filter(Device.deviceId == did).update({Device.state: state})
+        db.session.commit()
+        return True
+    except:
+        return False
