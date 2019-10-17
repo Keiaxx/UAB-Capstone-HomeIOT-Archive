@@ -8,10 +8,10 @@ from extensions.database import commit
 def add_usage(device: Device, date, type: str, data: int) -> Usage:
     """
 
-    :param device:
-    :param date:
-    :param type:
-    :param data:
+    :param device: deviceId
+    :param date: DATETIME
+    :param type: water/electric
+    :param data: gallons/kWh
     :return:
     """
     assert data > 0
@@ -22,11 +22,20 @@ def add_usage(device: Device, date, type: str, data: int) -> Usage:
     return usageData
 
 
-def get_usages(startdate, enddate) -> List[Usage]:
+def get_usages(startdate: str, enddate: str, type: str, ascending: bool) -> List[Usage]:
     """
-
-    :param startdate:
-    :param enddate:
+    :param startdate: Start date in ISO format
+    :param enddate: End date in ISO format
+    :param type: water/electric
+    :param ascending: sorting type
     :return:
     """
-    return Usage.query.filter(Usage.date.between(startdate, enddate)).all()
+    if startdate and enddate:
+        return Usage.query \
+            .filter(Usage.date.between(startdate, enddate)) \
+            .filter(Usage.type.like(type)).all()
+    else:
+        return Usage.query \
+            .filter(Usage.type.like(type)).all()
+
+

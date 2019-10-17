@@ -19,10 +19,10 @@ user_list_fields = api.model('UsageList', {
 
 usage_schema = {
     'usage_date_meta': fields.Nested(api.model('UsageDateMeta', {
-        'oldest': fields.Integer(readonly=True, description='The oldest date available for usage data, in ISO format'),
-        'latest': fields.Integer(readonly=True, description='The latest date available for usage data, in ISO format')
+        'oldest': fields.String(readonly=True, description='The oldest date available for usage data, in ISO format'),
+        'latest': fields.String(readonly=True, description='The latest date available for usage data, in ISO format')
      })),
-    'electricity': fields.Nested(user_list_fields),
+    'electric': fields.Nested(user_list_fields),
     'water': fields.Nested(user_list_fields)
 }
 
@@ -40,7 +40,7 @@ class Usage(Resource):
             'todo': 'not yet implemented'
         }
 
-
+# TODO: Add aggregation type ex. hourly/daily/weekly
 @usage_ns.route('')
 @api.doc(params={
     'start': 'Start date in ISO format (YYYY-MM-DD)',
@@ -63,13 +63,53 @@ class UsageList(Resource):
         start = validateDate(args['start'])
         end = validateDate(args['end'])
 
+        electric = get_usages(start, end, 'electric', True),
+        water  = get_usages(start, end, 'electric', True),
+
+        emap = []
+        wmap = []
+
+        for el in electric:
+            for e in el:
+                emap.append({
+                    'd': e.date,
+                    'v': e.data
+                })
+
+        for el in water:
+            for w in el:
+                wmap.append({
+                    'd': w.date,
+                    'v': w.data
+                })
+
+        print(list(emap))
+
         if start and end:
             return {
-                'todo': 'start and end date request'
+                'usage_date_meta': {
+                    'oldest': 'todo',
+                    'latest': 'todo'
+                },
+                'electric': {
+                    'usage': emap
+                },
+                'water': {
+                    'usage': wmap
+                }
             }
         elif not start and not end:
             return {
-                'todo': 'default latest day request'
+                'usage_date_meta': {
+                    'oldest': 'todo',
+                    'latest': 'todo'
+                },
+                'electric': {
+                    'usage': emap
+                },
+                'water': {
+                    'usage': wmap
+                }
             }
         else:
             raise BadRequest("Must specify both start and end params")
