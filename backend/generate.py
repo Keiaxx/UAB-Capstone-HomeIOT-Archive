@@ -129,7 +129,9 @@ if __name__ == "__main__":
                 edao.add_event(dishwasher, "ON", start_time)
                 edao.add_event(dishwasher, "OFF", end_time)
                 usage = general_eq(1800 ,timedelta(minutes = 45))
+                water_heater_usage(start_time, 6)
                 udao.add_usage(dishwasher, dates, "electric", usage/1000)
+                udao.add_usage(dishwasher, dates, "water", water_usage_calculation(6))
 
 
 
@@ -235,7 +237,20 @@ if __name__ == "__main__":
         main_hvac = ddao.add_hvac(garage,"main_hvac", 3500 )
         garage_door = ddao.add_door(garage,"garage_door")
         birmingham = City_location("Birmingham", "Alabama", "61ddd4b2d1917d2d18707c527467ad92")
-        
+        water_heater = ddao.add_electric_device(garage, "water_heater", 4500)
+
+
+        def water_heater_usage(given_date: datetime, water: float):
+            start_time = given_date
+            HEATER_MIN_PER_GAL = timedelta(minutes=4)
+            process_time = water * HEATER_MIN_PER_GAL
+            end_time = start_time + process_time
+            edao.add_event(water_heater, "ON", start_time)
+            edao.add_event(water_heater, "OFF", end_time)
+            usage = compute_water_heater_usage(water)
+            udao.add_usage(water_heater, given_date, "electric", usage/1000)
+
+
 
 
         """
@@ -584,7 +599,6 @@ if __name__ == "__main__":
         Bedroom2 light usage Computation
 
         """
-
         def bedroom2_light_usage(given_date: datetime):
             dates = given_date
             days = calendar.day_name[dates.weekday()]
@@ -643,6 +657,253 @@ if __name__ == "__main__":
                 usage = general_eq(100,timedelta(minutes = 240))
                 udao.add_usage(bedroom2_tv, dates, "electric", usage/1000)
 
+        """
+        Adding bathroom1 and Adding devices to it
+
+        """
+        Bathroom1 = ldao.add_location('Bathroom1')
+        bathroom1_exhaust_fan = ddao.add_electric_device(Bathroom1,'bathroom1_exhaust_fan',30)
+        bathroom1_light = ddao.add_light(Bathroom1,'bathroom1_light',60)
+        bathroom1_bath_water_meter = ddao.add_water_meter(Bathroom1,'bathroom1_bath_water_meter')
+
+        def bathroom1_light_usage(given_date: datetime, usage_start_time: int):
+            dates = given_date
+            days = calendar.day_name[dates.weekday()]
+            if days == "Monday" or days == "Tuesday" or days == "Wednesday" or days == "Thursday" or days == "Friday":
+                start_time = given_date + timedelta(hours = usage_start_time)
+                on_minutes = random.randint(45, 60)
+                end_time = start_time + timedelta(minutes = on_minutes) 
+                edao.add_event(bathroom1_light, "ON", start_time)
+                edao.add_event(bathroom1_light, "OFF", end_time)
+                usage = general_eq(60, timedelta(minutes = on_minutes))
+                udao.add_usage(bathroom1_light, dates, "electric", usage/1000)
+            else:
+                r = random.randint(1, 3)
+                usage_time = 0
+                for x in range(r):
+                    s = random.randint(7, 20)
+                    start_time = given_date + timedelta(hours = s)
+                    on_minutes = random.randint(20 , 60)
+                    end_time = start_time + timedelta(minutes = on_minutes)
+                    edao.add_event(bathroom1_light, "ON", start_time)
+                    edao.add_event(bathroom1_light, "OFF", end_time)
+                    usage_time += on_minutes
+                usage = general_eq(60, timedelta(minutes =on_minutes))
+                udao.add_usage(bathroom1_light, dates, "electric", usage/1000)
+
+        def bathroom1_exhaust_fan_usage(given_date: datetime, starting_time:int, on_minutes:int):
+            dates = given_date
+            start_time = starting_time
+            end_time = start_time + timedelta(minutes = on_minutes)
+            edao.add_event(bathroom1_exhaust_fan, "ON", start_time)
+            edao.add_event(bathroom1_exhaust_fan, "OFF", end_time)
+            usage = general_eq(60, timedelta(minutes = on_minutes))
+            udao.add_usage(bathroom1_exhaust_fan, dates, "electric", usage/1000)
+
+        def bathroom1_bath_water_meter_usage(given_date: datetime, usage_start_time: int, times: int):
+            dates = given_date
+            days = calendar.day_name[dates.weekday()]
+            heater_water = 30 * 0.65
+            if times == 2:
+                start_time = given_date + timedelta(hours = usage_start_time)
+                on_minutes = random.randint(20, 25)
+                end_time = start_time + timedelta(minutes = on_minutes)
+                bathroom1_exhaust_fan_usage(given_date, start_time, on_minutes)
+                water_heater_usage(start_time, heater_water) 
+                edao.add_event(bathroom1_bath_water_meter, "ON", start_time)
+                edao.add_event(bathroom1_bath_water_meter, "OFF", end_time)
+                usage = water_usage_calculation(30)
+                udao.add_usage(bathroom1_bath_water_meter, dates, "water", usage)
+                #Time2
+                start_time2 = end_time +timedelta(minutes = 5)
+                on_minutes2 = random.randint(20,25)
+                end_time2 = start_time2 + timedelta(minutes = on_minutes2)
+                edao.add_event(bathroom1_bath_water_meter, "ON", start_time2)
+                edao.add_event(bathroom1_bath_water_meter, "OFF", end_time2)
+                bathroom1_exhaust_fan_usage(given_date, start_time2, on_minutes2) 
+                water_heater_usage(start_time2, heater_water)
+                usage1 = water_usage_calculation(30)
+                udao.add_usage(bathroom1_bath_water_meter, dates, "water", usage1)
+            else:
+                start_time = given_date + timedelta(hours = usage_start_time)
+                on_minutes = random.randint(20, 25)
+                end_time = start_time + timedelta(minutes = on_minutes)
+                bathroom1_exhaust_fan_usage(given_date, start_time, on_minutes) 
+                water_heater_usage(start_time, heater_water)
+                edao.add_event(bathroom1_bath_water_meter, "ON", start_time)
+                edao.add_event(bathroom1_bath_water_meter, "OFF", end_time)
+                usage = water_usage_calculation(30)
+                udao.add_usage(bathroom1_bath_water_meter, dates, "water", usage)
+                #Time 2
+                start_time2 = end_time +timedelta(minutes = 5)
+                on_minutes2 = random.randint(20,25)
+                end_time2 = start_time2 + timedelta(minutes = on_minutes2)
+                edao.add_event(bathroom1_bath_water_meter, "ON", start_time2)
+                edao.add_event(bathroom1_bath_water_meter, "OFF", end_time2)
+                bathroom1_exhaust_fan_usage(given_date, start_time2, on_minutes2) 
+                water_heater_usage(start_time2, heater_water)
+                usage2 = water_usage_calculation(30)
+                udao.add_usage(bathroom1_bath_water_meter, dates, "water", usage2)
+                #Time 3
+                start_time3 = end_time2 +timedelta(hours = 3)
+                on_minutes3 = random.randint(20,25)
+                end_time3 = start_time3 + timedelta(minutes = on_minutes3)
+                edao.add_event(bathroom1_bath_water_meter, "ON", start_time3)
+                edao.add_event(bathroom1_bath_water_meter, "OFF", end_time3)
+                bathroom1_exhaust_fan_usage(given_date, start_time3, on_minutes3) 
+                water_heater_usage(start_time3, heater_water)
+                usage3 = water_usage_calculation(30)
+                udao.add_usage(bathroom1_bath_water_meter, dates, "water", usage3)
+
+
+        
+
+         
+
+        """
+        Adding bathroom1 and Adding devices to it
+
+        """
+        Bathroom2 = ldao.add_location('Bathroom2')
+        bathroom2_exhaust_fan = ddao.add_electric_device(Bathroom2,'bathroom2_exhaust_fan',30)
+        bathroom2_light = ddao.add_light(Bathroom2,'bathroom2_light',60)
+        bathroom2_shower_water_meter= ddao.add_water_meter(Bathroom2,'bathroom2_shower_water_meter')
+        
+        def bathroom2_light_usage(given_date: datetime, usage_start_time: int):
+            dates = given_date
+            days = calendar.day_name[dates.weekday()]
+            if days == "Monday" or days == "Tuesday" or days == "Wednesday" or days == "Thursday" or days == "Friday":
+                start_time = given_date + timedelta(hours = usage_start_time)
+                on_minutes = random.randint(45, 60)
+                end_time = start_time + timedelta(minutes = on_minutes) 
+                edao.add_event(bathroom2_light, "ON", start_time)
+                edao.add_event(bathroom2_light, "OFF", end_time)
+                usage = general_eq(60, timedelta(minutes = on_minutes))
+                udao.add_usage(bathroom2_light, dates, "electric", usage/1000)
+            else:
+                r = random.randint(1, 3)
+                usage_time = 0
+                for x in range(r):
+                    s = random.randint(7, 20)
+                    start_time = given_date + timedelta(hours = s)
+                    on_minutes = random.randint(20 , 60)
+                    end_time = start_time + timedelta(minutes = on_minutes)
+                    edao.add_event(bathroom2_light, "ON", start_time)
+                    edao.add_event(bathroom2_light, "OFF", end_time)
+                    usage_time += on_minutes
+                usage = general_eq(60, timedelta(minutes =on_minutes))
+                udao.add_usage(bathroom2_light, dates, "electric", usage/1000)
+
+        def bathroom2_exhaust_fan_usage(given_date: datetime, starting_time:int, on_minutes:int):
+            dates = given_date
+            start_time = starting_time
+            end_time = start_time + timedelta(minutes = on_minutes)
+            edao.add_event(bathroom2_exhaust_fan, "ON", start_time)
+            edao.add_event(bathroom2_exhaust_fan, "OFF", end_time)
+            usage = general_eq(60, timedelta(minutes = on_minutes))
+            udao.add_usage(bathroom2_exhaust_fan, dates, "electric", usage/1000)
+
+        def bathroom2_shower_water_meter_usage(given_date: datetime, usage_start_time: int, times: int):
+            dates = given_date
+            days = calendar.day_name[dates.weekday()]
+            heater_water = 25 * 0.65
+            if times == 2:
+                start_time = given_date + timedelta(hours = usage_start_time)
+                on_minutes = random.randint(20, 25)
+                end_time = start_time + timedelta(minutes = on_minutes)
+                bathroom2_exhaust_fan_usage(given_date, start_time, on_minutes) 
+                water_heater_usage(start_time, heater_water)
+                edao.add_event(bathroom2_shower_water_meter, "ON", start_time)
+                edao.add_event(bathroom2_shower_water_meter, "OFF", end_time)
+                usage = water_usage_calculation(25)
+                udao.add_usage(bathroom2_shower_water_meter, dates, "water", usage)
+                #Time2
+                start_time2 = end_time +timedelta(minutes = 5)
+                on_minutes2 = random.randint(20,25)
+                end_time2 = start_time2 + timedelta(minutes = on_minutes2)
+                edao.add_event(bathroom2_shower_water_meter, "ON", start_time2)
+                edao.add_event(bathroom2_shower_water_meter, "OFF", end_time2)
+                bathroom2_exhaust_fan_usage(given_date, start_time2, on_minutes2)
+                water_heater_usage(start_time2, heater_water) 
+                usage1 = water_usage_calculation(25)
+                udao.add_usage(bathroom2_shower_water_meter, dates, "water", usage1)
+            else:
+                start_time = given_date + timedelta(hours = usage_start_time)
+                on_minutes = random.randint(20, 25)
+                end_time = start_time + timedelta(minutes = on_minutes)
+                bathroom2_exhaust_fan_usage(given_date, start_time, on_minutes)
+                water_heater_usage(start_time, heater_water) 
+                edao.add_event(bathroom2_shower_water_meter, "ON", start_time)
+                edao.add_event(bathroom2_shower_water_meter, "OFF", end_time)
+                usage = water_usage_calculation(25)
+                udao.add_usage(bathroom2_shower_water_meter, dates, "water", usage)
+                #Time 2
+                start_time2 = end_time +timedelta(minutes = 5)
+                on_minutes2 = random.randint(20,25)
+                end_time2 = start_time2 + timedelta(minutes = on_minutes2)
+                edao.add_event(bathroom2_shower_water_meter, "ON", start_time2)
+                edao.add_event(bathroom2_shower_water_meter, "OFF", end_time2)
+                bathroom2_exhaust_fan_usage(given_date, start_time2, on_minutes2)
+                water_heater_usage(start_time2, heater_water) 
+                usage2 = water_usage_calculation(25)
+                udao.add_usage(bathroom2_shower_water_meter, dates, "water", usage2)
+                #Time 3
+                start_time3 = end_time2 +timedelta(hours = 3)
+                on_minutes3 = random.randint(20,25)
+                end_time3 = start_time3 + timedelta(minutes = on_minutes3)
+                edao.add_event(bathroom2_shower_water_meter, "ON", start_time3)
+                edao.add_event(bathroom2_shower_water_meter, "OFF", end_time3)
+                bathroom2_exhaust_fan_usage(given_date, start_time3, on_minutes3) 
+                water_heater_usage(start_time3, heater_water)
+                usage3 = water_usage_calculation(25)
+                udao.add_usage(bathroom2_shower_water_meter, dates, "water", usage3)
+
+
+        """
+        Adding Laundary area and Addding washer and dryer         
+        """
+        Laundary_area = ldao.add_location('Laundary_area')
+        washer = ddao.add_electric_device(Laundary_area, 'washer',500)
+        washer_water_meter = ddao.add_water_meter(Laundary_area,'washer_water_meter')
+        dryer = ddao.add_electric_device(Laundary_area, 'dryer', 3000)
+
+
+        def washer_usage(given_date: datetime):
+            dates = given_date
+            days = calendar.day_name[dates.weekday()]
+            if days == "Staruday" or days == "Sunday":
+                r = random.randint(10, 19)
+                start_time = given_date + timedelta(hours = r)
+                end_time = start_time + timedelta(minutes = 30)
+                edao.add_event(washer, "ON", start_time)
+                edao.add_event(washer, "OFF", end_time)
+                dryer_usage(end_time+ timedelta(minutes =10) )   ##calling dryer methode to start 
+                usage = general_eq(500 ,timedelta(minutes = 30))
+                water_heater_usage(start_time, 20 * 0.85)       ##calling heater methode to start 
+                udao.add_usage(washer, dates, "electric", usage/1000)
+                udao.add_usage(washer_water_meter, dates, "water", water_usage_calculation(20))
+                start_time2 = given_date + end_time + timedelta(minutes )
+                end_time2 = start_time2 + timedelta(minutes = 30)
+                edao.add_event(washer, "ON", start_time2)
+                edao.add_event(washer, "OFF", end_time2)
+                dryer_usage(end_time2+ timedelta(minutes =10)) ##calling dryer methode to start
+                water_heater_usage(start_time2, 20 * 0.85)     ##calling heater methode to start
+                usage2 = general_eq(500 ,timedelta(minutes = 30))
+                udao.add_usage(washer, dates, "electric", usage2/1000)
+                udao.add_usage(washer_water_meter, dates, "water", water_usage_calculation(20))
+
+        def dryer_usage(given_date: datetime):
+            dates = given_date
+            days = calendar.day_name[dates.weekday()]
+            start_time = given_date
+            end_time = start_time + timedelta(minutes = 30)
+            edao.add_event(dryer, "ON", start_time)
+            edao.add_event(dryer, "OFF", end_time)
+            usage = general_eq(3000 ,timedelta(minutes = 30))
+            udao.add_usage(dryer, dates, "electric", usage)
+
+
+            
 
         """
 
@@ -676,6 +937,8 @@ if __name__ == "__main__":
                 bedroom2_tv_usage(first_date)
                 bedroom2_light_usage(first_date)
                 first_date += timedelta(days=1)
+
+
 
         """
 
@@ -738,6 +1001,54 @@ if __name__ == "__main__":
                 main_hvac_usage(first_date)
                 first_date += timedelta(days=1) 
 
+
+      
+        """
+
+        Giving start date and end date of which
+        user wants to compute data for Bathroom1.
+
+        """
+        def Bathroom1_usage(start_date: datetime, end_date: datetime ):
+            days_date = end_date - start_date
+            first_date = start_date
+        
+            for x in range(days_date.days + 1):
+                days = calendar.day_name[first_date.weekday()]
+                if(first_date == dt.today()):
+                    break
+                
+                if days == "Monday" or days == "Tuesday" or days == "Wednesday" or days == "Thursday" or days == "Friday":
+                    usage_time = random.randint(5, 6)
+                    bathroom1_light_usage(first_date, usage_time)
+                    bathroom1_bath_water_meter_usage(first_date, usage_time, 2)
+                else:
+                    usage_time = random.randint(7, 19)
+                    bathroom1_bath_water_meter_usage(first_date, usage_time, 3)
+                    bathroom1_light_usage(first_date, usage_time)
+                first_date += timedelta(days=1) 
+
+
+        def Bathroom2_usage(start_date: datetime, end_date: datetime ):
+            days_date = end_date - start_date
+            first_date = start_date
+        
+            for x in range(days_date.days + 1):
+                days = calendar.day_name[first_date.weekday()]
+                if(first_date == dt.today()):
+                    break
+                
+                if days == "Monday" or days == "Tuesday" or days == "Wednesday" or days == "Thursday" or days == "Friday":
+                    usage_time = random.randint(5, 6)
+                    bathroom2_light_usage(first_date, usage_time)
+                    bathroom2_shower_water_meter_usage(first_date, usage_time, 2)
+                else:
+                    usage_time = random.randint(7, 19)
+                    bathroom2_shower_water_meter_usage(first_date, usage_time, 3)
+                    bathroom2_light_usage(first_date, usage_time)
+                first_date += timedelta(days=1) 
+
+
         """
 
         Giving start date and end date of which
@@ -752,12 +1063,15 @@ if __name__ == "__main__":
             Bedroom2_usage(start, end)  ## calls Bedroom2_usage
             living_room_usage(start, end)  ## calls Livingroom_usage
             garage_usage(start, end)  ## calls garage_usage
+            Bathroom1_usage(start, end)
+            Bathroom2_usage(start, end)
+        
 
         """
         Test Case is below we can change 
         it later to compute data for last 2 months. 
         """
-        home_usage(datetime(2019, 9, 24), datetime(2019,9, 26))
+        home_usage(datetime.today() - timedelta(days= 61), datetime.today() - timedelta(days=1))
 
 
        
