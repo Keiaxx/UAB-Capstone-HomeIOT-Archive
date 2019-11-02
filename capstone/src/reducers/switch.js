@@ -1,14 +1,9 @@
-const initialState = {
-    age:21,
-    garage1:            ["off", 0, 0],
-    garage2:            ["off", 0, 0],
-    frontDoor:          ["off", 0, 0],
-    backDoor:           ["off", 0, 0],
-    oven:               ["off", 200, 500],
-    washingMachine:     ["off", 0, 0]  
-};
+import {
+    DEVICE_STATE_CHANGE,
+    GET_DEVICES
+} from '../actions'
 
-const reducer = (state = initialState, action) =>{
+const reducer = (state, action) =>{
     const newState = {...state};
 
     switch(action.type){
@@ -32,6 +27,41 @@ const reducer = (state = initialState, action) =>{
                 ...state,
                 frontDoor:["off", 600, 300]
             }
+        case GET_DEVICES:
+
+            if(action.devices) state.devices.list = action.devices
+
+            let devicesWithStateMappedToBoolean = state.devices.list.map((el) => {
+                if(el.state === "ON"){
+                    el.state = true
+                }else{
+                    el.state = false
+                }
+                return el
+            })
+
+            return {
+                ...state,
+                devices: {
+                    fetching: action.fetching,
+                    list: devicesWithStateMappedToBoolean
+                }
+            }
+        case DEVICE_STATE_CHANGE:
+                let mutatedDevice = action.device
+                let currDevices = state.devices
+
+                let newDeviceState = mutatedDevice.state === "ON" ? true : false;
+
+                return {
+                    ...state,
+                    devices: {
+                        fetching: false,
+                        list: state.devices.list.map(device =>
+                            device.deviceId === mutatedDevice.deviceId ? { ...device, state: newDeviceState } : device
+                        )
+                    }
+                }
         default:
             return newState;
     }
