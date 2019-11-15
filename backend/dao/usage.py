@@ -1,5 +1,6 @@
 from typing import List
 
+
 from models.usage import Usage
 from models.device import Device
 from extensions.database import commit
@@ -33,9 +34,13 @@ def get_usages(startdate: str, enddate: str, type: str, ascending: bool) -> List
     if startdate and enddate:
         return Usage.query \
             .filter(Usage.date.between(startdate, enddate)) \
-            .filter(Usage.type.like(type)).all()
+            .filter(Usage.type.like(type)) \
+            .order_by(Usage.date.asc()) \
+            .all()
     else:
         return Usage.query \
-            .filter(Usage.type.like(type)).all()
+            .filter(Usage.type.like(type)) \
+            .order_by(Usage.date.asc()) \
+            .all()
 
 
