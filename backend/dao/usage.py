@@ -5,6 +5,8 @@ from models.usage import Usage
 from models.device import Device
 from extensions.database import commit
 
+from sqlalchemy import func
+
 
 def add_usage(device: Device, date, type: str, data: int) -> Usage:
     """
@@ -42,5 +44,19 @@ def get_usages(startdate: str, enddate: str, type: str, ascending: bool) -> List
             .filter(Usage.type.like(type)) \
             .order_by(Usage.date.asc()) \
             .all()
+
+def get_device_total_usage(deviceid: int, startdate: str, enddate: str) -> int:
+    if startdate and enddate:
+        return Usage.query.with_entities(func.sum(Usage.data) \
+            .label("usage_total")) \
+            .filter(Usage.date.between(startdate, enddate)) \
+            .filter(Usage.deviceId == deviceid) \
+            .first()[0]
+    else:
+        return Usage.query.with_entities(func.sum(Usage.data) \
+            .label("usage_total")) \
+            .filter(Usage.deviceId == deviceid) \
+            .first()[0]
+
 
 

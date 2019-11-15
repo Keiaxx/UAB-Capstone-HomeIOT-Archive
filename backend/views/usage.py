@@ -9,6 +9,7 @@ from dao.usage import *
 from werkzeug.exceptions import BadRequest
 
 usage_individual = api.model('UsageData', {
+    'did': fields.String(required=True, description='The deviceId associated with the UsageData'),
     'd': fields.String(required=True, description='The datetime of the usage aggregation'),
     'v': fields.String(required=True, description='The value of usage, kWh/gallons based on which category context')
 })
@@ -29,15 +30,28 @@ usage_schema = {
 usage_model = api.model('UsageResponse', usage_schema)
 
 
-@usage_ns.route('/<int:id>')
+@usage_ns.route('/<int:deviceid>')
+@usage_ns.param('deviceid', 'The deviceid to get')
+@api.doc(params={
+    'start': 'Start date in ISO format (YYYY-MM-DD)',
+    'end': 'End date in ISO format (YYYY-MM-DD)'
+})
 class Usage(Resource):
-    """Gets a list of all available locations"""
+    """Get total usage for a specific deviceid from a specified date range"""
 
-    @api.doc(description='Get usage for a specific device id')
-    def get(self):
-        '''List all locations'''
+    @api.doc(description='Get total usage for a specific deviceid from a specified date range')
+    def get(self, deviceid):
+        '''Get total usage for a specific deviceid from a specified date range'''
+        parser = reqparse.RequestParser()
+        parser.add_argument('start')
+        parser.add_argument('end')
+        args = parser.parse_args()
+
+        start = validateDate(args['start'])
+        end = validateDate(args['end'])
+
         return {
-            'todo': 'not yet implemented'
+            'usage_total': get_device_total_usage(deviceid, start, end)
         }
 
 # TODO: Add aggregation type ex. hourly/daily/weekly
@@ -64,7 +78,7 @@ class UsageList(Resource):
         end = validateDate(args['end'])
 
         electric = get_usages(start, end, 'electric', True),
-        water  = get_usages(start, end, 'electric', True),
+        water  = get_usages(start, end, 'water', True),
 
         emap = []
         wmap = []
@@ -72,6 +86,7 @@ class UsageList(Resource):
         for el in electric:
             for e in el:
                 emap.append({
+                    'did': e.deviceId,
                     'd': e.date,
                     'v': e.data
                 })
@@ -79,6 +94,7 @@ class UsageList(Resource):
         for el in water:
             for w in el:
                 wmap.append({
+                    'did': e.deviceId,
                     'd': w.date,
                     'v': w.data
                 })
