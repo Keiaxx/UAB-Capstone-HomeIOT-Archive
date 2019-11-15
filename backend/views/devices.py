@@ -3,7 +3,7 @@
 
 from flask_restplus import Resource, fields
 from views.api import api, devices_ns
-from dao.device import get_devices, set_device_state, get_device_by_id
+from dao.device import get_devices, set_device_state, get_device_by_id, get_hvac_systems, set_hvac_systems
 
 from werkzeug.exceptions import BadRequest
 
@@ -34,8 +34,35 @@ class Device(Resource):
     @api.marshal_with(device_model)
     def get(self):
         '''List all devices'''
-        print(get_devices())
         return get_devices()
+
+@devices_ns.route('/thermostat')
+class HVAC(Resource):
+    '''Operations for HVAC systems'''
+
+    @api.doc(description='Get current HVAC settings')
+    @api.marshal_with(device_model)
+    def get(self):
+        '''Get current HVAC settings'''
+        return get_hvac_systems()
+
+@devices_ns.route('/thermostat/<int:setf>/<int:highf>/<int:lowf>')
+@devices_ns.param('setf', 'The temperature setpoint')
+@devices_ns.param('highf', 'The temperature to trigger cooling system')
+@devices_ns.param('lowf', 'The temperature to trigger heating system')
+class SetHVAC(Resource):
+    '''Operations to set HVAC params'''
+
+    @api.doc(description='Set current HVAC settings')
+    @api.marshal_with(device_model)
+    def put(self, setf, highf, lowf):
+        '''Set current HVAC settings'''
+        print(setf, highf, lowf)
+        try:
+            return set_hvac_systems(setf, highf, lowf)
+        except AssertionError as e:
+            print(e)
+            raise BadRequest("AssertionError: Ensure setf/highf/lowf are within correct ranges")
 
 @devices_ns.route('/<int:deviceid>')
 @devices_ns.param('deviceid', 'The deviceid to get')
