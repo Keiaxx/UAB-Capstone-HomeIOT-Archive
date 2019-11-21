@@ -38,20 +38,6 @@ class House extends Component {
 
     const { dispatch } = this.props;
     dispatch(fetchDevices());
-
-    // for (let it in devicesloc) {
-    //   let device = devicesloc[it]
-
-    //   this.items.push(<img src={LightBulb} style={
-    //     {
-    //       top: device.y,
-    //       left: device.x,
-    //       width: '50px',
-    //       position: 'absolute'
-    //     }
-    //   } />)
-    
-
   }
 
   render() {
@@ -74,8 +60,6 @@ class House extends Component {
             backgroundPosition: 'left',
             backgroundSize: '200px 200px'
           }} />
-  
-  
   
         <DeviceList devices={this.props.devicelist}/>
       </div>

@@ -6,11 +6,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import NavigationIcon from '@material-ui/icons/Navigation';
 
 //component imports
 import ButtonAppBar from './AppBar';
 import House from './houseComponents/House';
 import Temp from './houseComponents/TodaysWeather';
+import { Button } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -73,7 +79,16 @@ function Dashboard() {
         <Grid item xs={6} md={4} lg={3}>
           <Paper className={fixedHeightPaper}>
             <Temp />
-          </Paper> 
+          </Paper>
+          <Fab color="primary" aria-label="add" className={classes.fab}>
+            <AddIcon />
+          </Fab>
+          <Fab color="primary" aria-label="add" className={classes.fab}>
+            <AddIcon />
+          </Fab>          
+          <Fab color="primary" aria-label="add" className={classes.fab}>
+            <AddIcon />
+          </Fab>
           <House />
         </Grid>
       </Container>
