@@ -1,17 +1,14 @@
 
 import React from 'react';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 
-const useStyles = makeStyles({
-  depositContext: {
-    flex: 1,
-  },
-});
 
-export default function Temp() {
-  const classes = useStyles();
+
+function Temp() {
+  
   return (
     <React.Fragment>
       <Typography component="p" variant="h6">
@@ -21,3 +18,21 @@ export default function Temp() {
     </React.Fragment>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+      age: state.age,
+      oven: state.oven,
+      frontDoor: state.frontDoor,
+      devices: state.devices,
+      devicelist: state.devices.list
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+      dispatch: dispatch
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Temp);

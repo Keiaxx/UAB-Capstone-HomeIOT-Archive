@@ -8,78 +8,6 @@ import LightBulb from "./lightbulb.jpg";
 
 import { fetchDevices, setDeviceState } from "../../actions";
 
-const devicesstuff = [
-  {
-    name: 'garage',
-    x: 568,
-    y: 80
-  },
-  {
-    name: 'waterheater',
-    x: 700,
-    y: 180
-  },
-  {
-    name: 'washerdryer',
-    x: 840,
-    y: 140
-  },
-  {
-    name: 'backdoor',
-    x: 870,
-    y: 20
-  },
-  {
-    name: 'oven',
-    x: 935,
-    y: 335
-  },
-  {
-    name: 'fridge',
-    x: 920,
-    y: 415
-  },
-  {
-    name: 'frontdoor',
-    x: 15,
-    y: 710
-  },
-  {
-    name: 'bed1',
-    x: 100,
-    y: 370
-  },
-  {
-    name: 'bed2',
-    x: 330,
-    y: 370
-  },
-  {
-    name: 'bed3',
-    x: 700,
-    y: 370
-  },
-  {
-    name: 'bath',
-    x: 540,
-    y: 370
-  },
-]
-
-const useStyles = makeStyles(theme => ({
-  housediv: {
-    float: 'left',
-    position: 'relative'
-  },
-  houseimage: {
-    verticalAlign: 'bottom'
-  },
-  lightbulb: {
-    top: 0,
-    left: 0,
-    position: 'absolute'
-  }
-}))
 
 function DeviceList(props) {
   const rawList = props.devices
@@ -87,16 +15,15 @@ function DeviceList(props) {
   console.log("DEVICES LIST")
   console.log(rawList);
 
-  let deviceList = rawList.filter((device) => {
-    return device.state
-  }).map(device => {
+  let deviceList = rawList.map(device => {
       return (
         <img src={LightBulb} style={
           {
             top: device.y,
             left: device.x,
             width: '50px',
-            position: 'absolute'
+            position: 'absolute',
+            opacity: device.state ? 1 : 0.5
           }
         } key={device.deviceId}/>
       );

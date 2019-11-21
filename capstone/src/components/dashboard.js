@@ -71,9 +71,9 @@ function Dashboard() {
       <Container className={classes.container}>
         <ButtonAppBar />
         <Grid item xs={6} md={4} lg={3}>
-          {/* <Paper className={fixedHeightPaper}>
+          <Paper className={fixedHeightPaper}>
             <Temp />
-          </Paper> */}
+          </Paper> 
           <House />
         </Grid>
       </Container>
