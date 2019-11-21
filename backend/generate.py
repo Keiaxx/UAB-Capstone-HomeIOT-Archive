@@ -31,7 +31,17 @@ from dao.calculate import *
 from app import create_app
 from extensions.database import db
 
-app = create_app()
+# PostgreSQL config
+import yaml
+pgconfig = None
+with open("./pgconfig.yml", 'r') as stream: 
+    try:
+        pgconfig = yaml.safe_load(stream)
+    except yaml.YAMLError as exc:
+        print(exc)
+        exit(1)
+
+app = create_app(pgconfig)
 db.init_app(app)
 
 if __name__ == "__main__":
@@ -44,12 +54,13 @@ if __name__ == "__main__":
         os.remove(os.path.join(basedir, "homeiot.db"))
 
     # Run this file directly to create the database tables.
-    print("Initializing Database")
+    print("Connecting to Database")
 
     # Create application context and perform database initialization queries within the context
     with app.app_context():
+        print("DB Connected. Generating tables...")
         db.create_all()
-        print("Database initialized, generating data!")
+        print("Tables generated, generating data!")
 
 
         

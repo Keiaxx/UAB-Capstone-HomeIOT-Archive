@@ -36,12 +36,12 @@ def get_usages(startdate: str, enddate: str, type: str, ascending: bool) -> List
     if startdate and enddate:
         return Usage.query \
             .filter(Usage.date.between(startdate, enddate)) \
-            .filter(Usage.type.like(type)) \
+            .filter(Usage.type == type) \
             .order_by(Usage.date.asc()) \
             .all()
     else:
         return Usage.query \
-            .filter(Usage.type.like(type)) \
+            .filter(Usage.type == type) \
             .order_by(Usage.date.asc()) \
             .all()
 

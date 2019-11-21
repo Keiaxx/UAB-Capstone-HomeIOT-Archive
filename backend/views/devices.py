@@ -22,7 +22,9 @@ device_model = api.model('Device', {
     'high_f': fields.Integer(required=False, description='High triggerpoint of hvac'),
     'low_f': fields.Integer(required=False, description='Low triggerpoint of hvac'),
     'ext_f': fields.Integer(required=False, description='External temperature of home'),
-    'int_f': fields.Integer(required=False, description='Internal temperature of home')
+    'int_f': fields.Integer(required=False, description='Internal temperature of home'),
+    'x': fields.Integer(required=False, description='X Coordinate for GUI'),
+    'y': fields.Integer(required=False, description='Y Coordinate for GUI')
 })
 
 

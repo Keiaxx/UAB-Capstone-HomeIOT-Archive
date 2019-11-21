@@ -3,14 +3,15 @@
 
 from extensions.database import db
 from datetime import datetime
+from sqlalchemy import DateTime
 
 
 class Usage(db.Model):
     __tablename__ = "usage"
     usageId = db.Column(db.Integer, primary_key=True)
     deviceId = db.Column(db.Integer, db.ForeignKey("device.deviceId"))
-    date = db.Column(db.DATETIME, nullable=False)
-    type = db.Column(db.Enum('water', 'electric'), nullable=False)
+    date = db.Column(DateTime, nullable=False)
+    type = db.Column(db.Enum('water', 'electric', name="utility_type"), nullable=False)
     data = db.Column(db.Integer)
 
     device = db.relationship("Device", back_populates="usages")
