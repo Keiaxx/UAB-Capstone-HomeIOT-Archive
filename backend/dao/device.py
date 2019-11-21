@@ -165,6 +165,15 @@ def set_hvac_params(hvacsystem: HVAC, set_f:int, high_f: int, low_f: int, int_f:
 def get_hvac_systems() -> List[HVAC]:
     return HVAC.query.all()
 
+def set_hvac_systems(setf, highf, lowf) -> List[HVAC]:
+    # Ensure high temp is not less than low temp
+    assert highf > lowf
+    assert highf > setf and setf > lowf
+
+    HVAC.query.update({HVAC.set_f: setf, HVAC.high_f: highf, HVAC.low_f: lowf})
+    db.session.commit()
+    return HVAC.query.all()
+
 
 ###############
 # Generic Device Queries
@@ -194,3 +203,11 @@ def get_device_by_id(did: int) -> Device:
     """
     return Device.query.filter(Device.deviceId == did).first()
 
+
+def set_device_state(did: int, state: str) -> bool:
+    try:
+        Device.query.filter(Device.deviceId == did).update({Device.state: state})
+        db.session.commit()
+        return True
+    except:
+        return False

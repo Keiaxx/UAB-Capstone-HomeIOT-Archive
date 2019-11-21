@@ -19,6 +19,7 @@ from models.usage import Usage
 from views.api import apiv1
 from views.locations import api as locationApi
 from views.devices import api as deviceApi
+from views.usage import api as usageApi
 
 def register_extensions(app):
     db.init_app(app)

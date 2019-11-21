@@ -4,15 +4,17 @@
 from flask_restplus import Resource, fields
 from views.api import api, locations_ns
 from dao.location import get_locations
+from views.devices import device_model
 
 loc_schema = {
     'locationId': fields.Integer(readonly=True, description='The unique location id'),
-    'name': fields.String(required=True, description='The unique location name')
+    'name': fields.String(required=True, description='The unique location name'),
+    'devices': fields.List(fields.Nested(device_model))
 }
 
 loc_model = api.model('Location', loc_schema)
 
-@locations_ns.route('/')
+@locations_ns.route('')
 class Location(Resource):
     '''Gets a list of all available locations'''
 
