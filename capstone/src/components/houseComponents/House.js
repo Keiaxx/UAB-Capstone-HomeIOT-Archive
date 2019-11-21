@@ -37,17 +37,8 @@ function House() {
 
       <img src={LightBulb} style={
         {
-          top: 275,
-          left: 50,
-          width: '50px',
-          position: 'absolute'
-        }
-      } />
-
-      <img src={LightBulb} style={
-        {
-          top: 150,
-          left: 600,
+          top: 370,
+          left: 700,
           width: '50px',
           position: 'absolute'
         }
@@ -75,3 +66,17 @@ const mapStateToProps = (state) => {
 
 
 export default connect(mapStateToProps)(House);
+
+/*
+garage = 568 , 80
+waterheater = 700, 180
+washer and dryer = 840, 140
+backdoor = 870, 20
+oven = 935, 335
+fridge = 920, 415
+front door = 15, 710
+bed1 (lights) = 100, 370
+bed2 (lights) = 330, 370
+bed3 (lights) = 700 , 370
+bath (lights) = 540, 370
+*/
