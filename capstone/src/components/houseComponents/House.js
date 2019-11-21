@@ -38,22 +38,6 @@ class House extends Component {
 
     const { dispatch } = this.props;
     dispatch(fetchDevices());
-<<<<<<< HEAD
-=======
-    dispatch(getHVAC());
-
-    // for (let it in devicesloc) {
-    //   let device = devicesloc[it]
-
-    //   this.items.push(<img src={LightBulb} style={
-    //     {
-    //       top: device.y,
-    //       left: device.x,
-    //       width: '50px',
-    //       position: 'absolute'
-    //     }
-    //   } />)
->>>>>>> 1d518bfbce9700ca2b8dac4cc30e1bea8378d70a
   }
 
   render() {
@@ -76,17 +60,12 @@ class House extends Component {
             backgroundPosition: 'left',
             backgroundSize: '200px 200px'
           }} />
-<<<<<<< HEAD
-  
-        <DeviceList devices={this.props.devicelist}/>
-=======
 
 
 
         <DeviceList devices={this.props.devicelist} />
 
         {JSON.stringify(this.props.hvac)}
->>>>>>> 1d518bfbce9700ca2b8dac4cc30e1bea8378d70a
       </div>
     );
   }
