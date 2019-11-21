@@ -15,39 +15,4 @@ Overview of code and their files
     
     /***********************************************************************************************************/
     
-    detailed section of psudo code components and their functions will be listed below
     
-    
-    
-    /*************/
-    prelim WBS
-    name    tasks                           date you think it will be completed
-    Gentry    - create a statistics page    10/26
-                for the application with
-                graphs & figures describing
-                monthly usage
-              - create map documents to     11/2
-                display market research
-    /**********************************************************************************************************/
-    Senay
-    
-    Task Completed                              date of completion           
-    - Created Weather data file(weather.py)
-      which helps to get data real time             9/10
-      weather data.  
-    
-    - Generating Random electricity usage 
-      data from all sennsors except heater.         10/3
-      This is done under generate.py file
-      
-    beckend 
-        data generator
-            weather.py ------->  Under this file real time weather data is acquired using Dark sky api.
-        generate.py ------->    Under this file electricty usage and water usage data is generated of a house.
-      
-    
-    Future task
-    - Generating Random water usage 
-      data from all sennsors will be done.          10/20
-      This will done under generate.py file
-      
