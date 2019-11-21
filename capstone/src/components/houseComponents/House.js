@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import overall from "./overallView.png";
 import LightBulb from "./lightbulb.jpg";
 
-import { fetchDevices, setDeviceState } from "../../actions";
+import { fetchDevices, getHVAC } from "../../actions";
 
 
 function DeviceList(props) {
@@ -16,28 +16,29 @@ function DeviceList(props) {
   console.log(rawList);
 
   let deviceList = rawList.map(device => {
-      return (
-        <img src={LightBulb} style={
-          {
-            top: device.y,
-            left: device.x,
-            width: '50px',
-            position: 'absolute',
-            opacity: device.state ? 1 : 0.5
-          }
-        } key={device.deviceId}/>
-      );
+    return (
+      <img src={LightBulb} style={
+        {
+          top: device.y,
+          left: device.x,
+          width: '50px',
+          position: 'absolute',
+          opacity: device.state ? 1 : 0.5
+        }
+      } key={device.deviceId} />
+    );
   })
 
   return <ul>{deviceList}</ul>;
 }
 
 class House extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     const { dispatch } = this.props;
     dispatch(fetchDevices());
+    dispatch(getHVAC());
 
     // for (let it in devicesloc) {
     //   let device = devicesloc[it]
@@ -50,8 +51,6 @@ class House extends Component {
     //       position: 'absolute'
     //     }
     //   } />)
-    
-
   }
 
   render() {
@@ -74,10 +73,12 @@ class House extends Component {
             backgroundPosition: 'left',
             backgroundSize: '200px 200px'
           }} />
-  
-  
-  
-        <DeviceList devices={this.props.devicelist}/>
+
+
+
+        <DeviceList devices={this.props.devicelist} />
+
+        {JSON.stringify(this.props.hvac)}
       </div>
     );
   }
@@ -87,17 +88,18 @@ class House extends Component {
 
 const mapStateToProps = state => {
   return {
-      age: state.age,
-      oven: state.oven,
-      frontDoor: state.frontDoor,
-      devices: state.devices,
-      devicelist: state.devices.list
+    age: state.age,
+    oven: state.oven,
+    frontDoor: state.frontDoor,
+    devices: state.devices,
+    devicelist: state.devices.list,
+    hvac: state.hvac
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-      dispatch: dispatch
+    dispatch: dispatch
   };
 };
 
