@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
   },
   fixedHeight: {
     height: 200,
-  },
+  }
 }));
 
 function Dashboard() {
@@ -69,15 +69,15 @@ function Dashboard() {
   return (
     <div className={classes.root}>
       <Container maxWidth="md" className={classes.container}>
-        <ButtonAppBar/>
+        <ButtonAppBar />
         <Grid item xs={6} md={4} lg={3}>
-          <Paper className={fixedHeightPaper}>
+          {/* <Paper className={fixedHeightPaper}>
             <Temp />
-          </Paper>
-        <House/>
+          </Paper> */}
+          <House />
         </Grid>
       </Container>
-  </div>
+    </div>
   );
 }
 
