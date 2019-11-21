@@ -93,9 +93,6 @@ class switchBoard extends Component {
 //for every page you need a mapStateToProps for every component
 const mapStateToProps = state => {
     return {
-        age: state.age,
-        oven: state.oven,
-        frontDoor: state.frontDoor,
         devices: state.devices,
         devicelist: state.devices.list
     };
