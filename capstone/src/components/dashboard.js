@@ -68,7 +68,7 @@ function Dashboard() {
 
   return (
     <div className={classes.root}>
-      <Container maxWidth="md" className={classes.container}>
+      <Container className={classes.container}>
         <ButtonAppBar />
         <Grid item xs={6} md={4} lg={3}>
           {/* <Paper className={fixedHeightPaper}>

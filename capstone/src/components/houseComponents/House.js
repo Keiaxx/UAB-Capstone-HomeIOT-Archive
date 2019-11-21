@@ -6,7 +6,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import overall from "./overallView.png";
 import LightBulb from "./lightbulb.jpg";
 
-const devicesloc = [
+import { fetchDevices, setDeviceState } from "../../actions";
+
+const devicesstuff = [
   {
     name: 'garage',
     x: 568,
@@ -79,60 +81,101 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function House() {
-  let classes = useStyles();
-  let items = []
+function DeviceList(props) {
+  const rawList = props.devices
 
-  for (let it in devicesloc) {
-    let device = devicesloc[it]
+  console.log("DEVICES LIST")
+  console.log(rawList);
 
-    items.push(<img src={LightBulb} style={
-      {
-        top: device.y,
-        left: device.x,
-        width: '50px',
-        position: 'absolute'
-      }
-    } />)
+  let deviceList = rawList.filter((device) => {
+    return device.state
+  }).map(device => {
+      return (
+        <img src={LightBulb} style={
+          {
+            top: device.y,
+            left: device.x,
+            width: '50px',
+            position: 'absolute'
+          }
+        } key={device.deviceId}/>
+      );
+  })
+
+  return <ul>{deviceList}</ul>;
+}
+
+class House extends Component {
+  constructor(props){
+    super(props)
+
+    const { dispatch } = this.props;
+    dispatch(fetchDevices());
+
+    // for (let it in devicesloc) {
+    //   let device = devicesloc[it]
+
+    //   this.items.push(<img src={LightBulb} style={
+    //     {
+    //       top: device.y,
+    //       left: device.x,
+    //       width: '50px',
+    //       position: 'absolute'
+    //     }
+    //   } />)
+    
+
   }
 
-  return (
-    <div className={classes.housediv}>
-      <img
-        className={classes.houseimage}
-        src={overall}
-        style={{
-          backgroundImage: `url(require("./houseComponents/overallView.png"))`,
-          backgroundPosition: 'left',
-          backgroundSize: '200px 200px'
-        }} />
-
-
-
-      {items}
-    </div>
-  );
+  render() {
+    return (
+      <div style={
+        {
+          float: 'left',
+          position: 'relative'
+        }
+      }>
+        <img
+          style={
+            {
+              verticalAlign: 'bottom'
+            }
+          }
+          src={overall}
+          style={{
+            backgroundImage: `url(require("./houseComponents/overallView.png"))`,
+            backgroundPosition: 'left',
+            backgroundSize: '200px 200px'
+          }} />
+  
+  
+  
+        <DeviceList devices={this.props.devicelist}/>
+      </div>
+    );
+  }
 }
 
 
-function checkLights(props) {
-  const oven = props.oven[0];
-  if (oven === "on") { return (<img src={LightBulb} position="absolute" top={props.oven[1]} left={props.oven[2]} />) }
-  const frontDoor = props.frontDoor[0];
-  if (frontDoor === "on") { return (<img src={LightBulb} position="absolute" top={props.frontDoor[1]} left={props.frontDoor[2]} />) }
 
-}
-
-//for every page you need a mapStateToProps for every component
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
-    oven: state.oven,
-    frontDoor: state.frontDoor
-  }
-}
+      age: state.age,
+      oven: state.oven,
+      frontDoor: state.frontDoor,
+      devices: state.devices,
+      devicelist: state.devices.list
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+      dispatch: dispatch
+  };
+};
 
 
-export default connect(mapStateToProps)(House);
+export default connect(mapStateToProps, mapDispatchToProps)(House);
 
 
 
