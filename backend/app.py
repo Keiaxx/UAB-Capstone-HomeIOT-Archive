@@ -40,13 +40,13 @@ def create_app(pgconfig):
         DB_URI = 'postgres://%(user)s:%(password)s@%(ip)s:%(port)s/%(database)s' % pgconfig
 
         print(DB_URI)
-        app.config["SQLALCHEMY_ECHO"] = True
+        app.config["SQLALCHEMY_ECHO"] = False
         app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     else:
         # If no pgconfig given default to local sqlitedb
         # TODO: For ease of development locally, I am using SQLite temporarily. This will change to Postgre in the future.
-        app.config["SQLALCHEMY_ECHO"] = True
+        app.config["SQLALCHEMY_ECHO"] = False
         app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + os.path.join(basedir, "homeiot.db")
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 

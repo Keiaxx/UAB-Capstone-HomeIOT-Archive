@@ -12,7 +12,7 @@ class Usage(db.Model):
     deviceId = db.Column(db.Integer, db.ForeignKey("device.deviceId"))
     date = db.Column(DateTime, nullable=False)
     type = db.Column(db.Enum('water', 'electric', name="utility_type"), nullable=False)
-    data = db.Column(db.Integer)
+    data = db.Column(db.Float)
 
     device = db.relationship("Device", back_populates="usages")
 

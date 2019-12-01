@@ -39,7 +39,9 @@ class Device(db.Model):
         'polymorphic_on': type
     }
 
-    def __init__(self, location, name):
+    def __init__(self, location, x, y, name):
+        self.x = x
+        self.y = y
         self.name = name
         self.location = location
 
@@ -73,8 +75,10 @@ class Electric(Device):
         'polymorphic_identity': 'electric'
     }
     wattage = db.Column(db.INTEGER)
-
-    def __init__(self, location, name, wattage):
+    
+    def __init__(self, location, x, y, name, wattage):
+        self.x = x
+        self.y = y
         self.name = name
         self.wattage = wattage
         self.location = location

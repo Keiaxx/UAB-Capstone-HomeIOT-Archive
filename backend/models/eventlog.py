@@ -9,15 +9,17 @@ class EventLog(db.Model):
     __tablename__ = "eventlog"
     eventId = db.Column(db.Integer, primary_key=True)
     deviceId = db.Column(db.Integer, db.ForeignKey("device.deviceId"))
-    date = db.Column(DateTime, nullable=False)
-    state = db.Column(db.Enum('OPENDOOR', 'CLOSEDOOR' ,'OPENWINDOW', 'CLOSEWINDOW','ON', 'OFF', 'OFFLINE', 'ERROR', name="device_event_state"), default='OFF', nullable=False)
+    date = db.Column(DateTime, index=True, nullable=False)
+    state = db.Column(db.Enum('OPENDOOR', 'CLOSEDOOR' ,'OPENWINDOW', 'CLOSEWINDOW','ON', 'OFF', 'OFFLINE', 'ERROR', name="device_event_state"), default='OFF', index=True, nullable=False)
+    temperature = db.Column(db.Integer)
 
     device = db.relationship("Device", back_populates="events")
 
     def __repr__(self):
         return f'<EventLog | DeviceId: {self.deviceId}>'
 
-    def __init__(self, device, state, date):
+    def __init__(self, device, state, date, temperature):
         self.device = device
         self.state = state
         self.date = date
+        self.temperature = temperature

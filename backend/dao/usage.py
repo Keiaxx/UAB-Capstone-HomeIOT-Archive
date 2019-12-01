@@ -8,7 +8,7 @@ from extensions.database import commit
 from sqlalchemy import func
 
 
-def add_usage(device: Device, date, type: str, data: int) -> Usage:
+def add_usage(device: Device, date, type: str, data: float) -> Usage:
     """
 
     :param device: deviceId
