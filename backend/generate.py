@@ -186,7 +186,7 @@ if __name__ == "__main__":
                 edao.add_event(oven, "ON", start_time)
                 edao.add_event(oven, "OFF", end_time )
                 usage = general_eq(4000 ,timedelta(minutes = 45))
-                udao.add_usage(oven, dates, "electric", usage)
+                udao.add_usage(oven, dates, "electric", usage/1000)
             else: 
                 r = random.randint(18, 21)
                 start_time = given_date + timedelta(hours = r)
@@ -1085,22 +1085,22 @@ if __name__ == "__main__":
 
         """
         def home_usage(start: datetime, end: datetime):
-            #generate_kitchen_usage(start, end) ## calls generate_kitchen_usage
-            #Bedroom1_usage(start, end)  ## calls Bedroom1_usage
+            generate_kitchen_usage(start, end) ## calls generate_kitchen_usage
+            Bedroom1_usage(start, end)  ## calls Bedroom1_usage
             door_action(start,end)  ## calls door_usage
             window_action(start, end)  ## calls window_usage
-            #Bedroom2_usage(start, end)  ## calls Bedroom2_usage
-            #living_room_usage(start, end)  ## calls Livingroom_usage
+            Bedroom2_usage(start, end)  ## calls Bedroom2_usage
+            living_room_usage(start, end)  ## calls Livingroom_usage
             garage_usage(start, end)  ## calls garage_usage
-            #Bathroom1_usage(start, end)
-            #Bathroom2_usage(start, end)
+            Bathroom1_usage(start, end)
+            Bathroom2_usage(start, end)
         
 
         """
         Test Case is below we can change 
         it later to compute data for last 2 months. 
         """
-        home_usage(datetime.today() - timedelta(days= 2), datetime.today() - timedelta(days=1))
+        home_usage(datetime.today() - timedelta(days= 7), datetime.today() - timedelta(days=1))
 
 
        
