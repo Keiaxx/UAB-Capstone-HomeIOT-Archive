@@ -11,7 +11,7 @@ from extensions.database import commit
 ###############
 # Lights
 ###############
-def add_light(name: str, wattage: int, location: Location) -> Light:
+def add_light(location: Location, x: int, y: int, name: str, wattage: int) -> Light:
     """
     Adds a light to devices table and returns a Light model
 
@@ -20,7 +20,7 @@ def add_light(name: str, wattage: int, location: Location) -> Light:
     :param location:
     :return:
     """
-    newlight = Light(name, wattage, location)
+    newlight = Light(location, x, y, name, wattage)
     commit(newlight)
     return newlight
 
@@ -32,7 +32,7 @@ def get_lights() -> List[Light]:
 ###############
 # Doors
 ###############
-def add_door(location: Location, name: str) -> Door:
+def add_door(location: Location, x: int, y: int, name: str) -> Door:
     """
     Adds a door to devices table and returns a Door model
 
@@ -40,7 +40,7 @@ def add_door(location: Location, name: str) -> Door:
     :param name: A unique name for the door
     :return: Door object
     """
-    door = Door(location, name)
+    door = Door(location, x, y, name)
     commit(door)
     return door
 
@@ -57,7 +57,7 @@ def get_doors() -> List[Door]:
 ###############
 # Windows
 ###############
-def add_window(location: Location, name: str) -> Window:
+def add_window(location: Location, x: int, y: int, name: str) -> Window:
     """
     Adds a window to devices table and returns a Window model
 
@@ -65,7 +65,7 @@ def add_window(location: Location, name: str) -> Window:
     :param name:
     :return:
     """
-    newlight = Window(location, name)
+    newlight = Window(location, x, y, name)
     commit(newlight)
     return newlight
 
@@ -81,7 +81,7 @@ def get_windows() -> List[Window]:
 ###############
 # Water
 ###############
-def add_water_meter(location: Location, name: str) -> Water:
+def add_water_meter(location: Location, x: int, y: int, name: str) -> Water:
     """
     Adds a water meter to devices table and returns a Water model
 
@@ -89,7 +89,7 @@ def add_water_meter(location: Location, name: str) -> Water:
     :param name:
     :return:
     """
-    newlight = Water(location, name)
+    newlight = Water(location, x, y, name)
     commit(newlight)
     return newlight
 
@@ -101,7 +101,7 @@ def get_water_meters() -> List[Water]:
 ###############
 # Generic Electric Device
 ###############
-def add_electric_device(location: Location, name: str, wattage: int) -> Electric:
+def add_electric_device(location: Location, x: int, y: int, name: str, wattage: int) -> Electric:
     """
 
     :param location:
@@ -109,7 +109,7 @@ def add_electric_device(location: Location, name: str, wattage: int) -> Electric
     :param wattage:
     :return:
     """
-    newelec = Electric(location, name, wattage)
+    newelec = Electric(location, x, y, name, wattage)
     commit(newelec)
     return newelec
 
@@ -125,7 +125,7 @@ def get_electric_devices() -> List[Electric]:
 ###############
 # HVAC
 ###############
-def add_hvac(location: Location, name: str, wattage: int) -> HVAC:
+def add_hvac(location: Location, x: int, y: int, name: str, wattage: int) -> HVAC:
     """
 
     :param location:
@@ -133,7 +133,7 @@ def add_hvac(location: Location, name: str, wattage: int) -> HVAC:
     :param wattage:
     :return:
     """
-    newhvac = HVAC(location, name, wattage)
+    newhvac = HVAC(location, x, y, name, wattage)
     commit(newhvac)
     return newhvac
 
@@ -163,6 +163,15 @@ def set_hvac_params(hvacsystem: HVAC, set_f:int, high_f: int, low_f: int, int_f:
 
 
 def get_hvac_systems() -> List[HVAC]:
+    return HVAC.query.all()
+
+def set_hvac_systems(setf, highf, lowf) -> List[HVAC]:
+    # Ensure high temp is not less than low temp
+    assert highf > lowf
+    assert highf > setf and setf > lowf
+
+    HVAC.query.update({HVAC.set_f: setf, HVAC.high_f: highf, HVAC.low_f: lowf})
+    db.session.commit()
     return HVAC.query.all()
 
 

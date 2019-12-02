@@ -12,6 +12,11 @@ flask-sqlalchemy = "*"
 python-dateutil = "*"
 darkskylib = "*"
 geopy = "*"
+pyyaml = "*"
+psycopg2 = "*"
+scipy = "*"
+numpy = "*"
+scikit-learn = "*"
 
 [requires]
 python_version = "3.7"

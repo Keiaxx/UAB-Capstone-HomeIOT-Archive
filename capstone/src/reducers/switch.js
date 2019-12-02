@@ -1,27 +1,40 @@
 import {
     DEVICE_STATE_CHANGE,
-    GET_DEVICES,
-    GET_HVAC_SETTINGS,
-    SET_HVAC_TEMP
+    GET_DEVICES
 } from '../actions'
 
-const reducer = (state, action) => {
-    const newState = { ...state };
+const reducer = (state, action) =>{
+    const newState = {...state};
 
-    switch (action.type) {
-        case GET_HVAC_SETTINGS:
+    switch(action.type){
+        case 'OVEN_ON':
             return {
                 ...state,
-                hvac: action.settings
+                oven: ["on", 200, 500]
+            }
+        case 'OVEN_OFF':
+            return {
+                ...state,
+                oven:["off", 200, 500]
+            }
+        case 'FRONT_DOOR_ON':
+            return {
+                ...state,
+                frontDoor:["on", 600, 300]
+            }
+        case 'FRONT_DOOR_OFF':
+            return {
+                ...state,
+                frontDoor:["off", 600, 300]
             }
         case GET_DEVICES:
 
-            if (action.devices) state.devices.list = action.devices
+            if(action.devices) state.devices.list = action.devices
 
             let devicesWithStateMappedToBoolean = state.devices.list.map((el) => {
-                if (el.state === "ON") {
+                if(el.state === "ON"){
                     el.state = true
-                } else {
+                }else{
                     el.state = false
                 }
                 return el
@@ -35,27 +48,20 @@ const reducer = (state, action) => {
                 }
             }
         case DEVICE_STATE_CHANGE:
-            let mutatedDevice = action.device
-            let currDevices = state.devices
+                let mutatedDevice = action.device
+                let currDevices = state.devices
 
-            let newDeviceState = mutatedDevice.state === "ON" ? true : false;
+                let newDeviceState = mutatedDevice.state === "ON" ? true : false;
 
-            return {
-                ...state,
-                devices: {
-                    fetching: false,
-                    list: state.devices.list.map(device =>
-                        device.deviceId === mutatedDevice.deviceId ? { ...device, state: newDeviceState } : device
-                    )
+                return {
+                    ...state,
+                    devices: {
+                        fetching: false,
+                        list: state.devices.list.map(device =>
+                            device.deviceId === mutatedDevice.deviceId ? { ...device, state: newDeviceState } : device
+                        )
+                    }
                 }
-            }
-        /* HERE ************** */
-        case SET_HVAC_TEMP:
-            return {
-                ...state,
-                hvac: action.device
-            }
-
         default:
             return newState;
     }

@@ -17,6 +17,7 @@
 # If you worked on this file, add your name above so we can keep track of contributions
 
 from extensions.database import db
+from sqlalchemy import DateTime
 
 
 class Device(db.Model):
@@ -24,9 +25,11 @@ class Device(db.Model):
     deviceId = db.Column(db.Integer, primary_key=True)
     locationId = db.Column(db.Integer, db.ForeignKey("location.locationId"))
     name = db.Column(db.String(255), unique=True, nullable=False)
-    type = db.Column(db.Enum('door', 'window', 'water', 'electric', 'light', 'hvac'), nullable=False)
-    state = db.Column(db.Enum('ON', 'OFF', 'OFFLINE', 'ERROR'), default='OFF', nullable=False)
-    lastUpdated = db.Column(db.DateTime, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
+    type = db.Column(db.Enum('door', 'window', 'water', 'electric', 'light', 'hvac', name="device_type"), nullable=False)
+    state = db.Column(db.Enum('ON', 'OFF', 'OFFLINE', 'ERROR', name="device_state"), default='OFF', nullable=False)
+    lastUpdated = db.Column(DateTime, nullable=False, server_default=db.text("CURRENT_TIMESTAMP"))
+    x = db.Column(db.Integer)
+    y = db.Column(db.Integer)
 
     location = db.relationship("Location", back_populates="devices")
     events = db.relationship("EventLog", back_populates="device")
@@ -36,7 +39,9 @@ class Device(db.Model):
         'polymorphic_on': type
     }
 
-    def __init__(self, location, name):
+    def __init__(self, location, x, y, name):
+        self.x = x
+        self.y = y
         self.name = name
         self.location = location
 
@@ -70,8 +75,10 @@ class Electric(Device):
         'polymorphic_identity': 'electric'
     }
     wattage = db.Column(db.INTEGER)
-
-    def __init__(self, location, name, wattage):
+    
+    def __init__(self, location, x, y, name, wattage):
+        self.x = x
+        self.y = y
         self.name = name
         self.wattage = wattage
         self.location = location

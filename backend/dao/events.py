@@ -16,10 +16,21 @@ def add_event(device: Device, state: str, date) -> EventLog:
     :param date:
     :return:
     """
-    event = EventLog(device, state, date)
+    event = EventLog(device, state, date, 0)
     commit(event)
     return event
 
+def add_hvac_event(device: Device, state: str, temperature: int, date) -> EventLog:
+    """
+
+    :param device:
+    :param state:
+    :param date:
+    :return:
+    """
+    event = EventLog(device, state, date, temperature)
+    commit(event)
+    return event
 
 def get_events() -> List[EventLog]:
     """
