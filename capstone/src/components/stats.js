@@ -98,6 +98,7 @@ class StatsPage extends Component {
     super(props);
 
     this.state = {
+      jpyusd: 1,
       minDate: new Date(),
       maxDate: new Date(),
       selected_date: new Date(),
@@ -134,7 +135,19 @@ class StatsPage extends Component {
     }
   }
 
+  getUSDJPYConversion() {
+    let endpoint = "http://data.fixer.io/api/latest?access_key=95a9d4132546bd3bff1c0750a4d33775"
+
+    fetch(endpoint)
+      .then(response => response.json())
+      .then(data => {
+        this.state.jpyusd = data["rates"]["JPY"]
+        this.setState(this.state)
+      });
+  }
+
   componentDidMount() {
+    this.getUSDJPYConversion()
     this.loadStatistics(new Date())
   }
 
@@ -168,6 +181,7 @@ class StatsPage extends Component {
 
 
         this.setState({
+          jpyusd: this.state.jpyusd,
           minDate: moment(json.range.start),
           maxDate: moment(json.range.end),
           selected_date: this.state.selected_date,
@@ -232,8 +246,8 @@ class StatsPage extends Component {
           <Grid item xs={3}>
             <Paper className={classes.paper}>
               <Typography variant="h5" component="h3">
-                Electricity
-            </Typography>
+                Electricity / 電
+              </Typography>
               <Typography component="p">
                 {Math.round(this.state.usagedata.electricity.kwh * 100) / 100} kWh
             </Typography>
@@ -242,7 +256,7 @@ class StatsPage extends Component {
           <Grid item xs={3}>
             <Paper className={classes.paper}>
               <Typography variant="h5" component="h3">
-                Water
+                Water / 水
             </Typography>
               <Typography component="p">
                 {Math.round(this.state.usagedata.water.gallons * 100) / 100} ft^3
@@ -255,7 +269,7 @@ class StatsPage extends Component {
                 Total Cost To Date
             </Typography>
               <Typography component="p">
-                ${Math.round(current_cost * 100) / 100}
+                ${Math.round(current_cost * 100) / 100} / ¥{Math.round((current_cost*this.state.jpyusd) * 100) / 100}
               </Typography>
             </Paper>
           </Grid>
