@@ -6,25 +6,6 @@ if there is no arguement passed then there is no need to use payload:
 if there is an arguement payload is that variable passed
 it can be whatever, in this case it is just nr
 */
-
-export const turn = (status) => {
-  switch (status) {
-    case "TURNED_ON_OVEN":
-      return {
-        type: "OVEN_ON",
-      }
-    case "TURNED_OFF_OVEN":
-      return {
-        type: "OVEN_OFF"
-      }
-    case "FRONT_DOOR_ON":
-      return {
-        type: "FRONT_DOOR_ON",
-      }
-    default:
-  }
-};
-
 export const GET_DEVICES = 'GET_DEVICES'
 function receiveDevices(json) {
   console.log(json)
@@ -49,6 +30,15 @@ export const DEVICE_STATE_CHANGE = 'DEVICE_STATE_CHANGE'
 function deviceStateChanged(json) {
   return {
     type: DEVICE_STATE_CHANGE,
+    device: json
+  }
+}
+
+/* HERE ************** */
+export const SET_HVAC_TEMP = 'SET_HVAC_TEMP'
+function receivedHVACSet(json) {
+  return {
+    type:SET_HVAC_TEMP,
     device: json
   }
 }
@@ -110,5 +100,22 @@ export function getHVAC() {
       .then(json =>
         dispatch(receiveHVACSettings(json))
       )
+  }
+}
+
+/* HERE ************** */
+export function setHVAC(set_f, highf, lowf){
+  return function (dispatch){
+    console.log("setting HVAC");
+
+    return API.put(`device/thermostat/${set_f}/${highf}/${lowf}`)      
+    .then(
+      response => response.data,
+
+      error => console.log('An error occurred.', error)
+    )
+    .then(json =>
+      dispatch(receivedHVACSet(json))
+    )
   }
 }

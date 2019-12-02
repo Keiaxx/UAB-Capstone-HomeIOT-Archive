@@ -1,33 +1,14 @@
 import {
     DEVICE_STATE_CHANGE,
     GET_DEVICES,
-    GET_HVAC_SETTINGS
+    GET_HVAC_SETTINGS,
+    SET_HVAC_TEMP
 } from '../actions'
 
 const reducer = (state, action) => {
     const newState = { ...state };
 
     switch (action.type) {
-        case 'OVEN_ON':
-            return {
-                ...state,
-                oven: ["on", 200, 500]
-            }
-        case 'OVEN_OFF':
-            return {
-                ...state,
-                oven: ["off", 200, 500]
-            }
-        case 'FRONT_DOOR_ON':
-            return {
-                ...state,
-                frontDoor: ["on", 600, 300]
-            }
-        case 'FRONT_DOOR_OFF':
-            return {
-                ...state,
-                frontDoor: ["off", 600, 300]
-            }
         case GET_HVAC_SETTINGS:
             return {
                 ...state,
@@ -68,6 +49,17 @@ const reducer = (state, action) => {
                     )
                 }
             }
+            /* HERE ************** */
+        case SET_HVAC_TEMP:
+            return {
+                ...state,
+                devices:{
+                    lowf: action.lowf,
+                    set_f: action.set_f,
+                    highf: action.highf
+                }
+            }
+
         default:
             return newState;
     }

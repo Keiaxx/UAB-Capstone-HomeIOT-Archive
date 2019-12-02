@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 //imported house components
@@ -48,6 +49,9 @@ class House extends Component {
           position: 'relative'
         }
       }>
+          <Button variant="contained" color="secondary"> +   </Button><br/>
+          <Button variant="contained"> SET </Button> <br/>
+          <Button variant="contained" color="primary"> - </Button>
         <img
           style={
             {
@@ -65,7 +69,7 @@ class House extends Component {
 
         <DeviceList devices={this.props.devicelist} />
 
-        {JSON.stringify(this.props.hvac)}
+        {JSON.stringify(this.props.hvac.set_f)}
       </div>
     );
   }
@@ -92,21 +96,3 @@ const mapDispatchToProps = dispatch => {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(House);
-
-
-
-
-
-/*
-garage = 568 , 80
-waterheater = 700, 180
-washer and dryer = 840, 140
-backdoor = 870, 20
-oven = 935, 335
-fridge = 920, 415
-front door = 15, 710
-bed1 (lights) = 100, 370
-bed2 (lights) = 330, 370
-bed3 (lights) = 700 , 370
-bath (lights) = 540, 370
-*/

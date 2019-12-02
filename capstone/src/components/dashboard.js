@@ -6,8 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 
 //component imports
 import ButtonAppBar from './AppBar';
@@ -76,15 +74,6 @@ function Dashboard() {
           <Paper className={fixedHeightPaper}>
             <Temp />
           </Paper>
-          <Fab color="primary" aria-label="add" className={classes.fab}>
-            <AddIcon />
-          </Fab>
-          <Fab color="extended" aria-label="add" className={classes.fab}>
-            <AddIcon />
-          </Fab>          
-          <Fab style={{backgroundColor:'red'}} aria-label="add" className={classes.fab}>
-            <AddIcon />
-          </Fab>
           <House />
         </Grid>
       </Container>

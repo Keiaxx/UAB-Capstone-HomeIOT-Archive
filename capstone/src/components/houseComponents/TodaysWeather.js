@@ -1,36 +1,40 @@
 
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 
+import { fetchDevices, getHVAC } from "../../actions";
 
 
+class Temp extends Component {
+  constructor(props) {
+    super(props)
 
-function Temp() {
-  
-  return (
-    <React.Fragment>
-      <Typography component="p" variant="h6">
-        INDOOR
-        TEMP HERE
-      </Typography>
-    </React.Fragment>
-  );
+    const { dispatch } = this.props;
+    dispatch(getHVAC());
+  }
+
+  render(){
+    return (
+      <React.Fragment>
+        <Typography component="p" variant="h6">
+        {JSON.stringify(this.props.hvac.set_f)}      
+        </Typography>
+      </React.Fragment>
+    );
+  }
 }
+
 
 const mapStateToProps = state => {
   return {
-      age: state.age,
-      oven: state.oven,
-      frontDoor: state.frontDoor,
-      devices: state.devices,
-      devicelist: state.devices.list
+    hvac: state.hvac
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-      dispatch: dispatch
+    dispatch: dispatch
   };
 };
 
