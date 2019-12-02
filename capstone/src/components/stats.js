@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 class YearMonthPicker extends Component {
 
-  state = { date: Date.now() };
+
 
   handleDateChange = (date) => {
     this.setState({ date });
@@ -38,16 +38,22 @@ class YearMonthPicker extends Component {
 
   constructor(props) {
     super(props)
+
+    console.log("Datepicker set props mindate " + this.props.minDate)
+    this.state = { date: Date.now(), minDate: this.props.minDate, maxDate: this.props.maxDate };
+
   }
 
   render() {
     return (
       <Fragment>
         <DatePicker
-          openTo="year"
+          openTo="month"
           views={["year", "month"]}
           label="Year and Month"
-          helperText="Start from year selection"
+          helperText="Choose month"
+          minDate={this.props.minDate}
+          maxDate={this.props.maxDate}
           value={this.state.date}
           onChange={this.handleDateChange}
         />
@@ -92,6 +98,8 @@ class StatsPage extends Component {
     super(props);
 
     this.state = {
+      minDate: new Date(),
+      maxDate: new Date(),
       selected_date: new Date(),
       usagedata: {
         electricity: {
@@ -143,8 +151,10 @@ class StatsPage extends Component {
   loadStatistics(date) {
     console.log(date)
 
-    let currdate = moment(date).subtract(1, 'months').startOf('month')
+    let currdate = moment(date).startOf('month')
     let isostring = currdate.format("YYYY-MM-DD")
+
+    console.log("LOADING STATISTICS FOR " + date)
 
     API.get(`usage/usagestats?start=${isostring}`)
       .then(
@@ -156,7 +166,10 @@ class StatsPage extends Component {
         let stats = json.stats
         let graphing = json.graphing
 
+
         this.setState({
+          minDate: moment(json.range.start),
+          maxDate: moment(json.range.end),
           selected_date: this.state.selected_date,
           usagedata: {
             electricity: {
@@ -212,7 +225,7 @@ class StatsPage extends Component {
                 Choose Month
             </Typography>
               <MuiPickersUtilsProvider utils={MomentUtils}>
-                <YearMonthPicker onDateChanged={this.loadStatistics}></YearMonthPicker>
+                <YearMonthPicker minDate={this.state.minDate} maxDate={this.state.maxDate} onDateChanged={(e) => this.loadStatistics(e)}></YearMonthPicker>
               </MuiPickersUtilsProvider>
             </Paper>
           </Grid>
@@ -222,7 +235,7 @@ class StatsPage extends Component {
                 Electricity
             </Typography>
               <Typography component="p">
-                {this.state.usagedata.electricity.kwh} kWh
+                {Math.round(this.state.usagedata.electricity.kwh * 100) / 100} kWh
             </Typography>
             </Paper>
           </Grid>
@@ -232,7 +245,7 @@ class StatsPage extends Component {
                 Water
             </Typography>
               <Typography component="p">
-                {this.state.usagedata.water.gallons} ft^3
+                {Math.round(this.state.usagedata.water.gallons * 100) / 100} ft^3
             </Typography>
             </Paper>
           </Grid>
@@ -242,46 +255,46 @@ class StatsPage extends Component {
                 Total Cost To Date
             </Typography>
               <Typography component="p">
-                ${current_cost}
+                ${Math.round(current_cost * 100) / 100}
               </Typography>
             </Paper>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Paper className={classes.paper}>
               <Typography variant="h5" component="h3">
                 Estimated Total
             </Typography>
               <Typography component="p">
-                ${predicted_cost}
+                ${Math.round(predicted_cost * 100) / 100}
               </Typography>
+            </Paper>
+          </Grid>
+
+          <Grid item xs={4}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h3">
+                Avg. Daily Electric
+              </Typography>
+              <Typography component="p">
+                {Math.round(this.state.usagedata.average_daily.electricity * 100) / 100} kWh
+            </Typography>
+            </Paper>
+          </Grid>
+
+          <Grid item xs={4}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h3">
+                Avg. Daily Water
+              </Typography>
+              <Typography component="p">
+                {Math.round(this.state.usagedata.average_daily.water * 100) / 100} ft^3
+            </Typography>
             </Paper>
           </Grid>
 
           <Grid item xs={12}>
             <Paper className={classes.paper}>
               <UsageGraph series={this.state.graph} />
-            </Paper>
-          </Grid>
-
-          <Grid item xs={6}>
-            <Paper className={classes.paper}>
-              <Typography variant="h5" component="h3">
-                Average Daily Electricity Usage
-            </Typography>
-              <Typography component="p">
-                {this.state.usagedata.average_daily.electricity} kWh
-            </Typography>
-            </Paper>
-          </Grid>
-
-          <Grid item xs={6}>
-            <Paper className={classes.paper}>
-              <Typography variant="h5" component="h3">
-                Average Daily Water Usage
-            </Typography>
-              <Typography component="p">
-                {this.state.usagedata.average_daily.water} ft^3
-            </Typography>
             </Paper>
           </Grid>
         </Grid>
