@@ -49,7 +49,7 @@ def general_eq(rated_power: int, run_time: timedelta) -> float:
     return rated_power * to_hours(run_time)
 
 def water_usage_calculation(gallon_of_water: int) -> float:
-    return gallon_of_water / 7.8
+    return gallon_of_water / 7.48
 
 def compute_water_heater_usage(water_required: float) -> float:
     HEATER_MIN_PER_GAL = timedelta(minutes=4)
