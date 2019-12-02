@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 
 //imported house components
 import overall from "./overallView.png";
@@ -33,6 +32,7 @@ function DeviceList(props) {
   return <ul>{deviceList}</ul>;
 }
 
+
 class House extends Component {
   constructor(props) {
     super(props)
@@ -49,7 +49,7 @@ class House extends Component {
           position: 'relative'
         }
       }>
-          <Button variant="contained" color="secondary"> +   </Button><br/>
+          <Button variant="contained" color="secondary" > +   </Button><br/>
           <Button variant="contained"> SET </Button> <br/>
           <Button variant="contained" color="primary"> - </Button>
         <img
@@ -65,17 +65,12 @@ class House extends Component {
             backgroundSize: '200px 200px'
           }} />
 
-
-
         <DeviceList devices={this.props.devicelist} />
-
         {JSON.stringify(this.props.hvac.set_f)}
       </div>
     );
   }
 }
-
-
 
 const mapStateToProps = state => {
   return {
