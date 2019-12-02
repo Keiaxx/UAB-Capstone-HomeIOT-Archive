@@ -35,8 +35,15 @@ def watt_hours_to_kwatt_hours(watt_hours: float) -> float:
 def power_to_dollars(watt_hours: float) -> float:
     ELECTRICITY_COST_RATE = 0.12 # dollar per kWh
     power_kwh = watt_hours_to_kwatt_hours(watt_hours)
-    return power_kwh * ELECTRICITY_COST_RATE;
+    return power_kwh * ELECTRICITY_COST_RATE
 
+def kwh_to_dollars(power_kwh: float) -> float:
+    ELECTRICITY_COST_RATE = 0.12 # dollar per kWh
+    return power_kwh * ELECTRICITY_COST_RATE
+
+def gallons_to_dollars(gallons: float) -> float:
+    GALLON_COST_RATE = 2.52 / 748 # 748 gallons = 100 cubic feet
+    return GALLON_COST_RATE * gallons
 
 def general_eq(rated_power: int, run_time: timedelta) -> float:
     return rated_power * to_hours(run_time)
