@@ -59,11 +59,11 @@ class Temp extends Component {
           </Grid>
           <Grid item xs={4}>
             <Button variant="contained" color="secondary" onClick={
-              this.addOne(this.props.hvac.set_f,this.props.hvac.set_l,this.props.hvac.set_h )
+              this.addOne(this.props.hvac.set_f,this.props.hvac.low_f,this.props.hvac.high_f )
               }> + </Button><br />
             <Button variant="contained"> SET </Button> <br />
             <Button variant="contained" color="primary" onClick={
-              this.subOne(this.props.hvac.set_f,this.props.hvac.set_l,this.props.hvac.set_h )
+              this.subOne(this.props.hvac.set_f,this.props.hvac.low_f,this.props.hvac.high_f )
             } > - </Button>
           </Grid>
         </Grid>

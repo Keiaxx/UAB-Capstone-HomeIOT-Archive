@@ -102,11 +102,11 @@ export function getHVAC() {
   }
 }
 
-export function setHVAC(set_f, highf, lowf){
+export function setHVAC(set_f, low_f, high_f ){
   return function (dispatch){
     console.log("setting HVAC");
 
-    return API.put(`device/thermostat/${set_f}/${highf}/${lowf}`)      
+    return API.put(`device/thermostat/${set_f}/${high_f}/${low_f}`)      
     .then(
       response => response.data,
 
