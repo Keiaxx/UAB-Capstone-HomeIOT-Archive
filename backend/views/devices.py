@@ -64,7 +64,7 @@ class SetHVAC(Resource):
             return set_hvac_systems(setf, highf, lowf)
         except AssertionError as e:
             print(e)
-            raise BadRequest("AssertionError: Ensure setf/highf/lowf are within correct ranges")
+            return get_hvac_systems()
 
 @devices_ns.route('/<int:deviceid>')
 @devices_ns.param('deviceid', 'The deviceid to get')
