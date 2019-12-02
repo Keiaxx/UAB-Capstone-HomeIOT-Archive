@@ -19,7 +19,13 @@ function DeviceList(props) {
   console.log("DEVICES LIST")
   console.log(rawList);
 
-  let deviceList = rawList.map(device => {
+  let deviceList = rawList.filter(device => {
+    if(device.x === 0 && device.y === 0){
+      return false
+    }else{
+      return true
+    }
+  }).map(device => {
     return (
       <img src={LightBulb} style={
         {
