@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Component } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 //material-ui imports
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
+import { Button } from '@material-ui/core';
 
 //component imports
 import ButtonAppBar from './AppBar';
 import House from './houseComponents/House';
 import Temp from './houseComponents/TodaysWeather';
+
 
 const drawerWidth = 240;
 
@@ -62,23 +64,31 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Dashboard() {
-  const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  return (
-    <div className={classes.root}>
-      <Container className={classes.container}>
-        <ButtonAppBar />
-        <Grid item xs={6} md={4} lg={3}>
-          <Paper className={fixedHeightPaper}>
-            <Temp />
-          </Paper>
-          <House />
-        </Grid>
-      </Container>
-    </div>
-  );
+class Dashboard extends Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    const { classes } = this.props
+    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+    return (
+      <div className={classes.root}>
+        <Container className={classes.container}>
+          <ButtonAppBar />
+          <Grid item xs={6} md={4} lg={3}>
+            <Paper className={fixedHeightPaper}>
+              <Temp />
+            </Paper>
+            <House />
+          </Grid>
+        </Container>
+      </div>
+    );
+  }
 }
 
-export default Dashboard;
+
+export default withStyles(useStyles)(Dashboard)
