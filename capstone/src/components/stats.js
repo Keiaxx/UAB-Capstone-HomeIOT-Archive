@@ -13,6 +13,9 @@ import { DatePicker } from "@material-ui/pickers";
 import * as moment from 'moment';
 import API from '../services/api';
 
+//TODO: Round numbers
+//TODO: Change date picker to true month instead of going back one
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
