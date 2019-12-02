@@ -71,7 +71,7 @@ def last_day_of_month(any_day):
     next_month = any_day.replace(day=28) + datetime.timedelta(days=4)  # this will never fail
     return next_month - datetime.timedelta(days=next_month.day)
 
-def get_statistics(start: str):
+def get_statistics(start):
     # Get start date as datetime
     startdt = datetime.datetime.strptime(start, '%Y-%m-%d')
     enddt = last_day_of_month(startdt) # Calculate last day of the current month
@@ -97,7 +97,9 @@ def get_statistics(start: str):
 
     if daily_electric.rowcount is not 0:
 	    avg_daily_elec = sum_elec / daily_electric.rowcount
-	    avg_daily_water = sum_water / daily_water.rowcount
+
+    if daily_water.rowcount is not 0:
+        avg_daily_water = sum_water / daily_water.rowcount
 
     return {
         'totals': {
@@ -111,6 +113,24 @@ def get_statistics(start: str):
             'water': avg_daily_water
         }
     }
+
+def get_usage_month_range():
+    earliest = db.engine.execute(f"select date from usage order by date asc limit 1;")
+    latest = db.engine.execute(f"select date from usage order by date desc limit 1;")
+
+    earliest_date = datetime.datetime.now()
+    latest_date = datetime.datetime.now()
+
+    if earliest.rowcount is not 0:
+        return {
+            'start': earliest.first()[0].isoformat(),
+            'end': latest.first()[0].isoformat()
+        }
+    else:
+        return {
+            'start': earliest_date.isoformat(),
+            'end': latest_date.isoformat()
+        }  
 
 
 def get_graphing_data(start: str):
@@ -152,8 +172,8 @@ def get_graphing_data(start: str):
         yvalselec.append(sum_elec)
         ielec += 1
         sum_elec += data
-        elecraw.append([date.timestamp(), data])
-        electots.append([date.timestamp(), sum_elec])
+        elecraw.append([date.strftime('%Y-%m-%d %H:%M:%S'), data])
+        electots.append([date.strftime('%Y-%m-%d %H:%M:%S'), sum_elec])
 
     # Map water data from raw sql tuples
     for date, data in daily_water:
@@ -161,8 +181,8 @@ def get_graphing_data(start: str):
         yvalswater.append(sum_water)
         iwater += 1
         sum_water += data
-        waterraw.append([date.timestamp(), data])
-        watertots.append([date.timestamp(), sum_water])
+        waterraw.append([date.strftime('%Y-%m-%d %H:%M:%S'), data])
+        watertots.append([date.strftime('%Y-%m-%d %H:%M:%S'), sum_water])
 
 
     # Get the number of the last day of current month

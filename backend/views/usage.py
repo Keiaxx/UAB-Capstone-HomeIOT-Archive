@@ -29,6 +29,15 @@ usage_schema = {
 
 usage_model = api.model('UsageResponse', usage_schema)
 
+@usage_ns.route('/daterange')
+class UsageDateRange(Resource):
+    """Get usage date range"""
+
+    @api.doc(description='Get usage date range')
+    def get(self):
+        '''Get usage date range'''
+        return get_usage_month_range()
+
 @usage_ns.route('/usagestats')
 @api.doc(params={
     'start': 'Start date in ISO format (YYYY-MM-DD)'
@@ -47,13 +56,18 @@ class UsageStats(Resource):
 
         if start is None:
             # Default to current month
-            end = datetime.today()
-            start = datetime(end.year, end.month, 1)
+            end = datetime.datetime.today()
+            start = datetime.datetime(end.year, end.month, 1).strftime('%Y-%m-%d')
+
+            print("DATETIME IS ", start)
+
+
             
             stats = get_statistics(start)
             graphing = get_graphing_data(start)
 
             return {
+                'range': get_usage_month_range(),
                 'start': start,
                 'stats': stats,
                 'graphing': graphing
@@ -65,6 +79,7 @@ class UsageStats(Resource):
             graphing = get_graphing_data(start)
 
             return {
+                'range': get_usage_month_range(),
                 'start': start,
                 'stats': stats,
                 'graphing': graphing
