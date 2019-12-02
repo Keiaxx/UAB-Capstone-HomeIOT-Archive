@@ -1100,8 +1100,8 @@ if __name__ == "__main__":
         Test Case is below we can change 
         it later to compute data for last 2 months. 
         """
-        home_usage(datetime.today() - timedelta(days= 7), datetime.today() - timedelta(days=1))
-
+        #home_usage(datetime.today() - timedelta(days= 7), datetime.today() - timedelta(days=1))
+        home_usage(datetime(2019, 11, 1), datetime(2019, 11, 15))
 
        
 

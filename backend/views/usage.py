@@ -29,6 +29,46 @@ usage_schema = {
 
 usage_model = api.model('UsageResponse', usage_schema)
 
+@usage_ns.route('/usagestats')
+@api.doc(params={
+    'start': 'Start date in ISO format (YYYY-MM-DD)'
+})
+class UsageStats(Resource):
+    """Get usage statistics for a date range"""
+
+    @api.doc(description='Get usage statistics for a date range')
+    def get(self):
+        '''Get usage statistics for a date range'''
+        parser = reqparse.RequestParser()
+        parser.add_argument('start')
+        args = parser.parse_args()
+
+        start = validateDate(args['start'])
+
+        if start is None:
+            # Default to current month
+            end = datetime.today()
+            start = datetime(end.year, end.month, 1)
+            
+            stats = get_statistics(start)
+            graphing = get_graphing_data(start)
+
+            return {
+                'start': start,
+                'stats': stats,
+                'graphing': graphing
+            }
+        elif start:
+            # Use date range specifications
+
+            stats = get_statistics(start)
+            graphing = get_graphing_data(start)
+
+            return {
+                'start': start,
+                'stats': stats,
+                'graphing': graphing
+            }
 
 @usage_ns.route('/<int:deviceid>')
 @usage_ns.param('deviceid', 'The deviceid to get')
@@ -137,7 +177,7 @@ def validateDate(date):
         return None
 
     try:
-        datetime.strptime(date, '%Y-%m-%d')
+        datetime.datetime.strptime(date, '%Y-%m-%d')
         return date
     except ValueError:
         raise BadRequest(f'Date {date} is not valid format YYYY-MM-DD')
