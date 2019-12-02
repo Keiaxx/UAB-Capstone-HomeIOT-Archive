@@ -49,14 +49,14 @@ const reducer = (state, action) => {
                     )
                 }
             }
-            /* HERE ************** */
+        /* HERE ************** */
         case SET_HVAC_TEMP:
             return {
                 ...state,
-                devices:{
-                    lowf: action.lowf,
+                hvac: {
+                    low_f: action.low_f,
                     set_f: action.set_f,
-                    highf: action.highf
+                    high_f: action.high_f
                 }
             }
 

@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+
 //imported house components
 import overall from "./overallView.png";
 import LightBulb from "./lightbulb.jpg";
@@ -49,9 +53,6 @@ class House extends Component {
           position: 'relative'
         }
       }>
-          <Button variant="contained" color="secondary" > +   </Button><br/>
-          <Button variant="contained"> SET </Button> <br/>
-          <Button variant="contained" color="primary"> - </Button>
         <img
           style={
             {
@@ -66,7 +67,6 @@ class House extends Component {
           }} />
 
         <DeviceList devices={this.props.devicelist} />
-        {JSON.stringify(this.props.hvac.set_f)}
       </div>
     );
   }
