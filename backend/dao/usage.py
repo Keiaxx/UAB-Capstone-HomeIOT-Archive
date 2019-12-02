@@ -92,8 +92,12 @@ def get_statistics(start: str):
     for date, data in daily_water:
         sum_water += data
 
-    avg_daily_elec = sum_elec / daily_electric.rowcount
-    avg_daily_water = sum_water / daily_water.rowcount
+    avg_daily_elec = 0
+    avg_daily_water = 0
+
+    if daily_electric.rowcount is not 0:
+	    avg_daily_elec = sum_elec / daily_electric.rowcount
+	    avg_daily_water = sum_water / daily_water.rowcount
 
     return {
         'totals': {
@@ -148,14 +152,8 @@ def get_graphing_data(start: str):
         yvalselec.append(sum_elec)
         ielec += 1
         sum_elec += data
-        elecraw.append({
-            'date': date.strftime('%Y-%m-%d %H:%M:%S'),
-            'data': data
-        })
-        electots.append({
-            'date': date.strftime('%Y-%m-%d %H:%M:%S'),
-            'data': sum_elec
-        })
+        elecraw.append([date.timestamp(), data])
+        electots.append([date.timestamp(), sum_elec])
 
     # Map water data from raw sql tuples
     for date, data in daily_water:
@@ -163,42 +161,41 @@ def get_graphing_data(start: str):
         yvalswater.append(sum_water)
         iwater += 1
         sum_water += data
-        waterraw.append({
-            'date': date.strftime('%Y-%m-%d %H:%M:%S'),
-            'data': data
-        })
-        watertots.append({
-            'date': date.strftime('%Y-%m-%d %H:%M:%S'),
-            'data': sum_water
-        })
+        waterraw.append([date.timestamp(), data])
+        watertots.append([date.timestamp(), sum_water])
 
 
     # Get the number of the last day of current month
     end_day_num = enddt.day
+    ey_month_end_prediction = 0
+    wy_month_end_prediction = 0
 
-    # Linear regression for electricity totals
-    print("ELEC REGRESSION ======")
-    ex = np.asarray(xvalselec).reshape((-1, 1))
-    ey = np.asarray(yvalselec).reshape((-1, 1))
-    elec_model = LinearRegression().fit(ex, ey)
-    er_sq = elec_model.score(ex, ey)
-    print('     coefficient of determination:', er_sq)
+    try:
+        # Linear regression for electricity totals
+        print("ELEC REGRESSION ======")
+        ex = np.asarray(xvalselec).reshape((-1, 1))
+        ey = np.asarray(yvalselec).reshape((-1, 1))
+        elec_model = LinearRegression().fit(ex, ey)
+        er_sq = elec_model.score(ex, ey)
+        print('     coefficient of determination:', er_sq)
 
-    ey_month_end_prediction = elec_model.predict(np.asarray([[end_day_num]]))[0][0]
+        ey_month_end_prediction = elec_model.predict(np.asarray([[end_day_num]]))[0][0]
 
-    print('     elec eom prediction:', ey_month_end_prediction)
+        print('     elec eom prediction:', ey_month_end_prediction)
 
-    # Linear regression for water totals\
-    print("WATER REGRESSION ======")
-    wx = np.asarray(xvalswater).reshape((-1, 1))
-    wy = np.asarray(yvalswater).reshape((-1, 1))
-    water_model = LinearRegression().fit(wx, wy)
-    wr_sq = water_model.score(wx, wy)
-    print('     coefficient of determination:', wr_sq)
+        # Linear regression for water totals\
+        print("WATER REGRESSION ======")
+        wx = np.asarray(xvalswater).reshape((-1, 1))
+        wy = np.asarray(yvalswater).reshape((-1, 1))
+        water_model = LinearRegression().fit(wx, wy)
+        wr_sq = water_model.score(wx, wy)
+        print('     coefficient of determination:', wr_sq)
 
-    wy_month_end_prediction = water_model.predict(np.asarray([[end_day_num]]))[0][0]
+        wy_month_end_prediction = water_model.predict(np.asarray([[end_day_num]]))[0][0]
 
-    print('     water eom prediction:', wy_month_end_prediction)
+        print('     water eom prediction:', wy_month_end_prediction)
+    except:
+        pass
 
     # Calculation of pricing
     # Electricity 0.12 per kWh
