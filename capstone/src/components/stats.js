@@ -36,7 +36,7 @@ class YearMonthPicker extends Component {
     this.props.onDateChanged(date)
   };
 
-  constructor(props){
+  constructor(props) {
     super(props)
   }
 
@@ -125,75 +125,75 @@ class StatsPage extends Component {
       ]
     }
   }
-  
+
   componentDidMount() {
     this.loadStatistics(new Date())
   }
 
-  kwh_to_dollars = (kwh) => kwh*0.12
-  gallons_to_dollars = (gallons) => {
-    let gals = (2.52/748)*gallons
+  kwh_to_dollars = (kwh) => kwh * 0.12
+  ft3_to_dollars = (ft3) => {
+    let gals = (2.52 / 100) * ft3
     console.log(gals)
     return gals
   }
-  calculate_current_cost = () => this.kwh_to_dollars(this.state.usagedata.electricity.kwh) + this.gallons_to_dollars(this.state.usagedata.water.gallons)
-  calculate_estimated_cost = () => this.kwh_to_dollars(this.state.usagedata.eom_predictions.electricity) + this.gallons_to_dollars(this.state.usagedata.eom_predictions.water)
+  calculate_current_cost = () => this.kwh_to_dollars(this.state.usagedata.electricity.kwh) + this.ft3_to_dollars(this.state.usagedata.water.gallons)
+  calculate_estimated_cost = () => this.kwh_to_dollars(this.state.usagedata.eom_predictions.electricity) + this.ft3_to_dollars(this.state.usagedata.eom_predictions.water)
 
   // Handle month change events
   loadStatistics(date) {
     console.log(date)
 
-    let currdate = moment(date).subtract(1,'months').startOf('month')
+    let currdate = moment(date).subtract(1, 'months').startOf('month')
     let isostring = currdate.format("YYYY-MM-DD")
 
     API.get(`usage/usagestats?start=${isostring}`)
-    .then(
-      response => response.data,
-      error => console.log('An error occurred.', error)
-    )
-    .then(json => {
-      console.log(json)
-      let stats = json.stats
-      let graphing = json.graphing
+      .then(
+        response => response.data,
+        error => console.log('An error occurred.', error)
+      )
+      .then(json => {
+        console.log(json)
+        let stats = json.stats
+        let graphing = json.graphing
 
-      this.setState({
-        selected_date: this.state.selected_date,
-        usagedata: {
-          electricity: {
-            kwh: stats.totals.electricity,
+        this.setState({
+          selected_date: this.state.selected_date,
+          usagedata: {
+            electricity: {
+              kwh: stats.totals.electricity,
+            },
+            water: {
+              gallons: stats.totals.water,
+            },
+            eom_predictions: {
+              water: graphing.month_end_predict.water,
+              electricity: graphing.month_end_predict.electric,
+            },
+            average_daily: {
+              electricity: stats.dailyaverage.electricity,
+              water: stats.dailyaverage.water,
+            }
           },
-          water: {
-            gallons: stats.totals.water,
-          },
-          eom_predictions: {
-            water: graphing.month_end_predict.water,
-            electricity: graphing.month_end_predict.electric,
-          },
-          average_daily: {
-            electricity: stats.dailyaverage.electricity,
-            water: stats.dailyaverage.water,
-          }
-        },
-        graph: [
-          {
-            name: 'Daily Electric (kWh)',
-            data: graphing.electric.raw,
-          },
-          {
-            name: 'Daily Water (Gals)',
-            data: graphing.water.raw,
-          },
-          {
-            name: 'Electric Running Total',
-            data: graphing.electric.runningtotal,
-          },
-          {
-            name: 'Water Running Total',
-            data: graphing.water.runningtotal,
-          }
-        ]
-      });
-    })
+          graph: [
+            {
+              name: 'Daily Electric (kWh)',
+              data: graphing.electric.raw,
+            },
+            {
+              name: 'Daily Water (Gals)',
+              data: graphing.water.raw,
+            },
+            {
+              name: 'Electric Running Total',
+              data: graphing.electric.runningtotal,
+            },
+            {
+              name: 'Water Running Total',
+              data: graphing.water.runningtotal,
+            }
+          ]
+        });
+      })
 
   }
 
@@ -201,91 +201,91 @@ class StatsPage extends Component {
     const { classes } = this.props;
     const current_cost = this.calculate_current_cost()
     const predicted_cost = this.calculate_estimated_cost()
-    
+
 
     return (
       <div className={classes.root}>
-      <Grid container spacing={3}>
-      <Grid item xs={3}>
-          <Paper className={classes.paper}>
-            <Typography variant="h5" component="h3">
-              Choose Month
+        <Grid container spacing={3}>
+          <Grid item xs={3}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h3">
+                Choose Month
             </Typography>
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-						<YearMonthPicker onDateChanged={this.loadStatistics}></YearMonthPicker>
-					</MuiPickersUtilsProvider>
-          </Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>
-            <Typography variant="h5" component="h3">
-              Electricity
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <YearMonthPicker onDateChanged={this.loadStatistics}></YearMonthPicker>
+              </MuiPickersUtilsProvider>
+            </Paper>
+          </Grid>
+          <Grid item xs={3}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h3">
+                Electricity
             </Typography>
-            <Typography component="p">
-              {this.state.usagedata.electricity.kwh} kWh
+              <Typography component="p">
+                {this.state.usagedata.electricity.kwh} kWh
             </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>
-            <Typography variant="h5" component="h3">
-              Water
+            </Paper>
+          </Grid>
+          <Grid item xs={3}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h3">
+                Water
             </Typography>
-            <Typography component="p">
-              {this.state.usagedata.water.gallons} Gallons
+              <Typography component="p">
+                {this.state.usagedata.water.gallons} ft^3
             </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>
-            <Typography variant="h5" component="h3">
-              Total Cost To Date
+            </Paper>
+          </Grid>
+          <Grid item xs={3}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h3">
+                Total Cost To Date
             </Typography>
-            <Typography component="p">
-              ${current_cost}
+              <Typography component="p">
+                ${current_cost}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={3}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h3">
+                Estimated Total
             </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>
-            <Typography variant="h5" component="h3">
-              Estimated Total
-            </Typography>
-            <Typography component="p">
-              ${predicted_cost}
-            </Typography>
-          </Paper>
-        </Grid>
+              <Typography component="p">
+                ${predicted_cost}
+              </Typography>
+            </Paper>
+          </Grid>
 
-        <Grid item xs={12}>
-          <Paper className={classes.paper}>
-            <UsageGraph series={this.state.graph}/>
-          </Paper>
-        </Grid>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <UsageGraph series={this.state.graph} />
+            </Paper>
+          </Grid>
 
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>
-            <Typography variant="h5" component="h3">
-              Average Daily Electricity Usage
+          <Grid item xs={6}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h3">
+                Average Daily Electricity Usage
             </Typography>
-            <Typography component="p">
-              {this.state.usagedata.average_daily.electricity} kWh
+              <Typography component="p">
+                {this.state.usagedata.average_daily.electricity} kWh
             </Typography>
-          </Paper>
-        </Grid>
+            </Paper>
+          </Grid>
 
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>
-            <Typography variant="h5" component="h3">
-              Average Daily Water Usage
+          <Grid item xs={6}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h3">
+                Average Daily Water Usage
             </Typography>
-            <Typography component="p">
-              {this.state.usagedata.average_daily.water} Gallons
+              <Typography component="p">
+                {this.state.usagedata.average_daily.water} ft^3
             </Typography>
-          </Paper>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
+      </div>
     );
   }
 }
