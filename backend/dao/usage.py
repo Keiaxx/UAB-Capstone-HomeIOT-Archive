@@ -14,6 +14,8 @@ import numpy as np
 import scipy
 from sklearn.linear_model import LinearRegression
 
+from dao.calculate import kwh_to_dollars, gallons_to_dollars
+
 
 def add_usage(device: Device, date, type: str, data: float) -> Usage:
     """
@@ -96,7 +98,9 @@ def get_statistics(start: str):
     return {
         'totals': {
             'electricity': sum_elec,
-            'water': sum_water
+            'electricity_cost': kwh_to_dollars(sum_elec),
+            'water': sum_water,
+            'water_cost': gallons_to_dollars(sum_water)
         },
         'dailyaverage': {
             'electricity': avg_daily_elec,
@@ -196,10 +200,19 @@ def get_graphing_data(start: str):
 
     print('     water eom prediction:', wy_month_end_prediction)
 
+    # Calculation of pricing
+    # Electricity 0.12 per kWh
+    # Water $2.52 per 100 Cubic Feet of water
+    # 100 Cubic Feet is 748 Gallon
+    
+
+
     return {
         'month_end_predict': {
             'electric': ey_month_end_prediction,
-            'water': wy_month_end_prediction
+            'electric_cost': kwh_to_dollars(ey_month_end_prediction),
+            'water': wy_month_end_prediction,
+            'water_cost': gallons_to_dollars(wy_month_end_prediction)
         },
         'electric': {
             'raw': elecraw,
