@@ -37,7 +37,7 @@ function deviceStateChanged(json) {
 export const SET_HVAC_TEMP = 'SET_HVAC_TEMP'
 function receivedHVACSet(json) {
   return {
-    type:SET_HVAC_TEMP,
+    type: SET_HVAC_TEMP,
     device: json
   }
 }
@@ -102,18 +102,18 @@ export function getHVAC() {
   }
 }
 
-export function setHVAC(set_f, low_f, high_f ){
-  return function (dispatch){
+export function setHVAC(set_f, low_f, high_f) {
+  return function (dispatch) {
     console.log("setting HVAC");
 
-    return API.put(`device/thermostat/${set_f}/${high_f}/${low_f}`)      
-    .then(
-      response => response.data,
+    return API.put(`device/thermostat/${set_f}/${high_f}/${low_f}`)
+      .then(
+        response => response.data,
 
-      error => console.log('An error occurred.', error)
-    )
-    .then(json =>
-      dispatch(receivedHVACSet(json))
-    )
+        error => console.log('An error occurred.', error)
+      )
+      .then(json =>
+        dispatch(receivedHVACSet(json[0]))
+      )
   }
 }
