@@ -34,7 +34,6 @@ function deviceStateChanged(json) {
   }
 }
 
-/* HERE ************** */
 export const SET_HVAC_TEMP = 'SET_HVAC_TEMP'
 function receivedHVACSet(json) {
   return {
@@ -103,7 +102,6 @@ export function getHVAC() {
   }
 }
 
-/* HERE ************** */
 export function setHVAC(set_f, highf, lowf){
   return function (dispatch){
     console.log("setting HVAC");
