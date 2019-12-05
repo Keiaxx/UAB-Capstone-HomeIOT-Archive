@@ -78,7 +78,7 @@ class Dashboard extends Component {
       <div className={classes.root}>
         <Container className={classes.container}>
           <ButtonAppBar />
-          <Grid item xs={6} md={4} lg={3}>
+          <Grid item xs={5}>
             <Paper className={fixedHeightPaper}>
               <Temp />
             </Paper>
