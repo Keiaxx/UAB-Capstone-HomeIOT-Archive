@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: `https://homeiot.gose.pw/`
+  baseURL: `https://api.homeiot.gose.pw/`
 });
