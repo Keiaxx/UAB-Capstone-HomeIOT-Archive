@@ -16,6 +16,15 @@ from sklearn.linear_model import LinearRegression
 
 from dao.calculate import kwh_to_dollars, gallons_to_dollars
 
+from datetime import timedelta
+
+def utc_to_local(utc_dt):
+    # get integer timestamp to avoid precision lost
+    timestamp = calendar.timegm(utc_dt.timetuple())
+    local_dt = datetime.datetime.fromtimestamp(timestamp)
+    assert utc_dt.resolution >= timedelta(microseconds=1)
+    return local_dt.replace(microsecond=utc_dt.microsecond)
+
 
 def add_usage(device: Device, date, type: str, data: float) -> Usage:
     """
@@ -66,6 +75,9 @@ def get_device_total_usage(deviceid: int, startdate: str, enddate: str) -> int:
             .label("usage_total")) \
             .filter(Usage.deviceId == deviceid) \
             .first()[0]
+
+def get_last_usage_entry() -> Usage:
+    return Usage.query.order_by(Usage.date.desc()).first()
 
 def last_day_of_month(any_day):
     next_month = any_day.replace(day=28) + datetime.timedelta(days=4)  # this will never fail
@@ -132,6 +144,33 @@ def get_usage_month_range():
             'end': latest_date.isoformat()
         }  
 
+def get_temperature_data(start: str):
+        # Get start date as datetime
+    startdt = datetime.datetime.strptime(start, '%Y-%m-%d')
+    enddt = last_day_of_month(startdt) # Calculate last day of the current month
+
+    # Convert back to ISO format for sql purposes
+    start = startdt.strftime('%Y-%m-%d')
+    end = enddt.strftime('%Y-%m-%d')
+
+    exttemps = db.engine.execute(f"SELECT date_trunc('day', date) as daterange, avg(temperature) FROM eventlog WHERE state = 'EXTTEMP' AND date BETWEEN '{start}' AND '{end}' GROUP BY 1 ORDER BY daterange ASC;")
+    inttemps = db.engine.execute(f"SELECT date_trunc('day', date) as daterange, avg(temperature) FROM eventlog WHERE state = 'INTTEMP' AND date BETWEEN '{start}' AND '{end}' GROUP BY 1 ORDER BY daterange ASC;")
+
+    intraw = []
+    extraw = []
+
+    # Map electric data from raw sql tuples
+    for date, data in inttemps:
+        intraw.append([utc_to_local(date).strftime('%Y-%m-%d %H:%M:%S'), str(data)])
+
+    # Map water data from raw sql tuples
+    for date, data in exttemps:
+        extraw.append([utc_to_local(date).strftime('%Y-%m-%d %H:%M:%S'), str(data)])
+
+    return {
+        'internal': intraw,
+        'external': extraw
+    }
 
 def get_graphing_data(start: str):
     # Get start date as datetime
@@ -172,8 +211,8 @@ def get_graphing_data(start: str):
         yvalselec.append(sum_elec)
         ielec += 1
         sum_elec += data
-        elecraw.append([date.strftime('%Y-%m-%d %H:%M:%S'), data])
-        electots.append([date.strftime('%Y-%m-%d %H:%M:%S'), sum_elec])
+        elecraw.append([utc_to_local(date).strftime('%Y-%m-%d %H:%M:%S'), data])
+        electots.append([utc_to_local(date).strftime('%Y-%m-%d %H:%M:%S'), sum_elec])
 
     # Map water data from raw sql tuples
     for date, data in daily_water:
@@ -181,8 +220,8 @@ def get_graphing_data(start: str):
         yvalswater.append(sum_water)
         iwater += 1
         sum_water += data
-        waterraw.append([date.strftime('%Y-%m-%d %H:%M:%S'), data])
-        watertots.append([date.strftime('%Y-%m-%d %H:%M:%S'), sum_water])
+        waterraw.append([utc_to_local(date).strftime('%Y-%m-%d %H:%M:%S'), data])
+        watertots.append([utc_to_local(date).strftime('%Y-%m-%d %H:%M:%S'), sum_water])
 
 
     # Get the number of the last day of current month

@@ -17,7 +17,7 @@ class Usage(db.Model):
     device = db.relationship("Device", back_populates="usages")
 
     def __repr__(self):
-        return f'<Usage | Type: {self.type}>'
+        return f'<Usage | Type: {self.type} | Date: {self.date}>'
 
     def __init__(self, device: 'Device', date: datetime, type: str, data: int):
         self.device = device

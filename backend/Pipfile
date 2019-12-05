@@ -24,3 +24,4 @@ python_version = "3.7"
 [scripts]
 api = "python app.py"
 generate = "python generate.py"
+reset = "python resetdb.py"

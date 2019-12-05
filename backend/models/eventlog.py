@@ -10,7 +10,7 @@ class EventLog(db.Model):
     eventId = db.Column(db.Integer, primary_key=True)
     deviceId = db.Column(db.Integer, db.ForeignKey("device.deviceId"))
     date = db.Column(DateTime, index=True, nullable=False)
-    state = db.Column(db.Enum('OPENDOOR', 'CLOSEDOOR' ,'OPENWINDOW', 'CLOSEWINDOW','ON', 'OFF', 'OFFLINE', 'ERROR', name="device_event_state"), default='OFF', index=True, nullable=False)
+    state = db.Column(db.Enum('OPENDOOR', 'CLOSEDOOR' ,'OPENWINDOW', 'CLOSEWINDOW','ON', 'OFF', 'OFFLINE', 'ERROR', 'INTTEMP', 'EXTTEMP', name="device_event_state"), default='OFF', index=True, nullable=False)
     temperature = db.Column(db.Integer)
 
     device = db.relationship("Device", back_populates="events")
