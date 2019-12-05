@@ -7,7 +7,7 @@ import calendar
 
 # Import SQL Models
 from models.location import Location
-from models.device import Device
+from models.device import Device, Electric, Water
 from models.eventlog import EventLog
 from models.usage import Usage
 from data_generator.weather_data import *
@@ -1209,6 +1209,24 @@ class Generator:
             return datetime(nextusagedate.year, nextusagedate.month, nextusagedate.day)
         except:
             return datetime.now()
+
+    def on_demand_electric_usage(self, device: Electric, start_time: datetime, end_time: datetime):
+        edao.add_event(device, "ON", start_time)
+        edao.add_event(device, "OFF", end_time)
+
+        # Get timedelta from start-end
+        t_delta = end_time - start_time
+        # Convert seconds to minutes to use in general_eq
+        on_minutes = t_delta.seconds / 60
+
+        usage = general_eq(device.wattage, timedelta(minutes=on_minutes))
+        usage_kwh = usage/1000
+        print("Adding on demand usage for device: On time: ", on_minutes, " Total KWH: ", usage_kwh)
+        udao.add_usage(device, end_time, "electric", usage_kwh)
+
+        return {
+            'usage': usage_kwh
+        }
 
     def generate_next_day_auto(self):
         nextdate = self.get_next_date_to_generate()
