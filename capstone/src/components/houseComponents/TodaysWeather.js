@@ -37,29 +37,40 @@ class Temp extends Component {
   render() {
 
     return (
-      <React.Fragment>
-        <Grid container spacing={5}>
+        <Grid container spacing={12}>
 
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             Low:
             <Typography component="p" variant="h2">
               {JSON.stringify(this.props.hvac.low_f)}
             </Typography>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             Set:
             <Typography component="p" variant="h2">
               {JSON.stringify(this.props.hvac.set_f)}
             </Typography>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             High:
             <Typography component="p" variant="h2">
               {JSON.stringify(this.props.hvac.high_f)}
             </Typography>
           </Grid>
+          <Grid item xs={3}>
+            Int:
+            <Typography component="p" variant="h2">
+              {JSON.stringify(this.props.hvac.int_f)}
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            Ext:
+            <Typography component="p" variant="h2">
+              {JSON.stringify(this.props.hvac.ext_f)}
+            </Typography>
+          </Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             <Button variant="contained" color="secondary" onClick={(e) => {
               this.props.hvac.low_f++
               this.addOne(this.props.hvac.set_f, this.props.hvac.low_f, this.props.hvac.high_f)
@@ -72,7 +83,7 @@ class Temp extends Component {
             }
             } > - </Button>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             <Button variant="contained" color="secondary" onClick={(e) => {
               this.props.hvac.set_f++
               this.addOne(this.props.hvac.set_f, this.props.hvac.low_f, this.props.hvac.high_f)
@@ -85,7 +96,7 @@ class Temp extends Component {
             }
             } > - </Button>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             <Button variant="contained" color="secondary" onClick={(e) => {
               this.props.hvac.high_f++
               this.addOne(this.props.hvac.set_f, this.props.hvac.low_f, this.props.hvac.high_f)
@@ -99,7 +110,6 @@ class Temp extends Component {
             } > - </Button>
           </Grid>
         </Grid>
-      </React.Fragment>
     );
   }
 }
