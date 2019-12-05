@@ -138,7 +138,7 @@ def add_hvac(location: Location, x: int, y: int, name: str, wattage: int) -> HVA
     return newhvac
 
 
-def set_hvac_params(hvacsystem: HVAC, set_f:int, high_f: int, low_f: int, int_f: int, ext_f: int) -> None:
+def set_hvac_params(hvacsystem: HVAC, set_f: int, high_f: int, low_f: int, int_f: int, ext_f: int) -> None:
     """
 
     :param hvacsystem:
@@ -165,6 +165,7 @@ def set_hvac_params(hvacsystem: HVAC, set_f:int, high_f: int, low_f: int, int_f:
 def get_hvac_systems() -> List[HVAC]:
     return HVAC.query.all()
 
+
 def set_hvac_systems(setf, highf, lowf) -> List[HVAC]:
     # Ensure high temp is not less than low temp
     assert highf > lowf
@@ -183,7 +184,7 @@ def get_devices() -> List[Device]:
 
     :return:
     """
-    return Device.query.all()
+    return Device.query.order_by(Device.deviceId.asc()).all()
 
 
 def get_device_by_name(name: str) -> Device:
@@ -206,8 +207,10 @@ def get_device_by_id(did: int) -> Device:
 
 def set_device_state(did: int, state: str) -> bool:
     try:
-        Device.query.filter(Device.deviceId == did).update({Device.state: state})
+        Device.query.filter(Device.deviceId == did).update(
+            {Device.state: state})
         db.session.commit()
-        return True
+        device = Device.query.filter(Device.deviceId == did).first()
+        return device
     except:
         return False
