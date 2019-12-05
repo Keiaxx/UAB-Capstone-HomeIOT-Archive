@@ -31,12 +31,10 @@ from dao.calculate import *
 from app import create_app
 from extensions.database import db
 
-from generate_functions import Generator
-
 # PostgreSQL config
 import yaml
 pgconfig = None
-with open("./pgconfig.yml", 'r') as stream:
+with open("./pgconfig.yml", 'r') as stream: 
     try:
         pgconfig = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
@@ -61,10 +59,9 @@ if __name__ == "__main__":
     # Create application context and perform database initialization queries within the context
     with app.app_context():
         print("DB Connected. Generating tables...")
-        db.create_all()
-        print("Tables generated, generating data!")
+        db.drop_all(bind=None)
+        print("Tables removed. Ready to run generator...")
+
+       
 
 
-        geninstance = Generator.getInstance()
-        geninstance.generate_locations_and_devices()
-        geninstance.home_usage(datetime(2019, 12, 1), datetime(2019, 12, 6))

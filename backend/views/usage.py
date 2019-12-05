@@ -8,6 +8,8 @@ from dao.usage import *
 
 from werkzeug.exceptions import BadRequest
 
+from generate_functions import Generator
+
 usage_individual = api.model('UsageData', {
     'did': fields.String(required=True, description='The deviceId associated with the UsageData'),
     'd': fields.String(required=True, description='The datetime of the usage aggregation'),
@@ -28,6 +30,22 @@ usage_schema = {
 }
 
 usage_model = api.model('UsageResponse', usage_schema)
+
+@usage_ns.route('/generate_next')
+class UsageGenerateNext(Resource):
+    """Generate the next day of data"""
+
+    @api.doc(description='Generate the next day of data')
+    def get(self):
+        '''Generate the next day of data'''
+        print("Generating data api called")
+        geninstance = Generator.getInstance()
+        geninstance.instantiateSingleton()
+        geninstance.generate_next_day_auto()
+
+        return {
+            'generated': True
+        }
 
 @usage_ns.route('/daterange')
 class UsageDateRange(Resource):
@@ -65,11 +83,13 @@ class UsageStats(Resource):
             
             stats = get_statistics(start)
             graphing = get_graphing_data(start)
+            temperatures = get_temperature_data(start)
 
             return {
                 'range': get_usage_month_range(),
                 'start': start,
                 'stats': stats,
+                'temphistory': temperatures,
                 'graphing': graphing
             }
         elif start:
@@ -77,11 +97,13 @@ class UsageStats(Resource):
 
             stats = get_statistics(start)
             graphing = get_graphing_data(start)
+            temperatures = get_temperature_data(start)
 
             return {
                 'range': get_usage_month_range(),
                 'start': start,
                 'stats': stats,
+                'temphistory': temperatures,
                 'graphing': graphing
             }
 

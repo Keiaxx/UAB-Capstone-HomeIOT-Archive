@@ -11,6 +11,7 @@ from datetime import datetime as dt
 from datetime import timedelta
 from datetime import date
 from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut
 import certifi
 import ssl
 
@@ -26,6 +27,13 @@ class City_location():
         self.city_name =city_name
         self.state_name = state_name
         self.key = key
+
+    def do_geocode(self, place):
+        try:
+            geolocator = Nominatim(user_agent="darksky1")
+            return geolocator.geocode(place)
+        except GeocoderTimedOut:
+            return self.do_geocode(place)
         
     """
     CAll this function to get
@@ -33,8 +41,7 @@ class City_location():
     """
     def latitude(self) -> float:
         place = self.city_name + " " + self.state_name
-        geolocator = Nominatim(user_agent="darksky1")
-        locate = geolocator.geocode(place)     
+        locate = self.do_geocode(place)     
         return locate.latitude
 
     
@@ -44,8 +51,7 @@ class City_location():
     """
     def longitude(self) -> float:
         place = self.city_name + " " + self.state_name
-        geolocator = Nominatim(user_agent="darksky1")
-        locate = geolocator.geocode(place)     
+        locate = self.do_geocode(place)    
         return locate.longitude
 
     

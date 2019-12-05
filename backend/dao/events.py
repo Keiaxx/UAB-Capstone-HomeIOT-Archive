@@ -20,6 +20,30 @@ def add_event(device: Device, state: str, date) -> EventLog:
     commit(event)
     return event
 
+def add_int_temperature_log(device: Device, temperature: int, date) -> EventLog:
+    """
+
+    :param device:
+    :param state:
+    :param date:
+    :return:
+    """
+    event = EventLog(device, "INTTEMP", date, temperature)
+    commit(event)
+    return event
+
+def add_out_temperature_log(device: Device, temperature: int, date) -> EventLog:
+    """
+
+    :param device:
+    :param state:
+    :param date:
+    :return:
+    """
+    event = EventLog(device, "EXTTEMP", date, temperature)
+    commit(event)
+    return event
+
 def add_hvac_event(device: Device, state: str, temperature: int, date) -> EventLog:
     """
 

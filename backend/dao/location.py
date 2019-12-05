@@ -16,6 +16,14 @@ def add_location(name) -> Location:
     commit(newloc)
     return newloc
 
+def get_location_by_name(name: str) -> Location:
+    """
+
+    :param name:
+    :return:
+    """
+    return Location.query.filter(Location.name.ilike(name)).first()
+
 
 def get_locations() -> List[Location]:
     """
