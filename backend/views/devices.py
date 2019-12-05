@@ -108,7 +108,7 @@ class DeviceMutation(Resource):
                 # Logic to handle device state generation
                 if(stateupper == "ON"):
                     # Check if device is electric type
-                    if issubclass(Electric, type(device)):
+                    if issubclass(type(device), Electric):
                         print("Device is being set to ON and is electric")
                         parser = reqparse.RequestParser()
                         parser.add_argument('end')
