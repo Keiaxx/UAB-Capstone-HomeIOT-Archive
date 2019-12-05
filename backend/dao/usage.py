@@ -153,8 +153,8 @@ def get_temperature_data(start: str):
     start = startdt.strftime('%Y-%m-%d')
     end = enddt.strftime('%Y-%m-%d')
 
-    exttemps = db.engine.execute(f"SELECT date_trunc('day', date) as daterange, avg(temperature) FROM eventlog WHERE state = 'EXTTEMP' AND date BETWEEN '{start}' AND '{end}' GROUP BY 1 ORDER BY daterange ASC;")
-    inttemps = db.engine.execute(f"SELECT date_trunc('day', date) as daterange, avg(temperature) FROM eventlog WHERE state = 'INTTEMP' AND date BETWEEN '{start}' AND '{end}' GROUP BY 1 ORDER BY daterange ASC;")
+    exttemps = db.engine.execute(f"SELECT date_trunc('hour', date) as daterange, avg(temperature) FROM eventlog WHERE state = 'EXTTEMP' AND date BETWEEN '{start}' AND '{end}' GROUP BY 1 ORDER BY daterange ASC;")
+    inttemps = db.engine.execute(f"SELECT date_trunc('hour', date) as daterange, avg(temperature) FROM eventlog WHERE state = 'INTTEMP' AND date BETWEEN '{start}' AND '{end}' GROUP BY 1 ORDER BY daterange ASC;")
 
     intraw = []
     extraw = []
