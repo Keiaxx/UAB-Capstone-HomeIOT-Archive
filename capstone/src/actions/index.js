@@ -1,4 +1,5 @@
 import API from '../services/api'
+import * as moment from "moment"
 
 /* 
 these are set up as below
@@ -49,7 +50,7 @@ function requestDevices() {
   }
 }
 
-export function setDeviceState(deviceId, isOn) {
+export function setDeviceState(deviceId, isOn, enddate) {
 
   const targetString = isOn ? "ON" : "OFF";
 
@@ -57,7 +58,7 @@ export function setDeviceState(deviceId, isOn) {
 
     dispatch(requestDevices())
 
-    return API.put(`device/${deviceId}/setstate/${targetString}`)
+    return API.put(`device/${deviceId}/setstate/${targetString}?end=${enddate}`)
       .then(
         response => response.data,
 
@@ -83,6 +84,17 @@ export function fetchDevices() {
       .then(json =>
         dispatch(receiveDevices(json))
       )
+  }
+}
+
+export const TIME_INTERVAL_CHANGE = 'TIME_INTERVAL_CHANGE'
+export function setTimeInterval(value, unit) {
+  return function (dispatch) {
+    dispatch({
+      type: TIME_INTERVAL_CHANGE,
+      value: value,
+      unit: unit
+    })
   }
 }
 

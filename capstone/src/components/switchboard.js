@@ -5,7 +5,19 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
 
-import { fetchDevices, setDeviceState } from "../actions";
+import { fetchDevices, setDeviceState, setTimeInterval } from "../actions";
+
+import * as moment from "moment";
+
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Snackbar from '@material-ui/core/Snackbar';
+
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
 
 function DeviceItem(props) {
 
@@ -57,7 +69,7 @@ function DeviceItem(props) {
             let checked = event.target.checked;
             device.state = checked;
             setState({ ...state, checked: checked });
-            dispatch(setDeviceState(device.deviceId, checked));
+            dispatch(setDeviceState(device.deviceId, checked, moment().add(props.timeinterval.value, props.timeinterval.unit).toISOString()));
         };
     }
 
@@ -78,14 +90,14 @@ function DeviceItem(props) {
 }
 
 function DeviceList(props) {
+    const timeinterval = props.timeinterval
     const dispatch = props.dispatch;
     const rawList = props.devicelist;
-
-    console.log(props.devices);
 
     const deviceList = rawList.map(device => {
         return (
             <DeviceItem
+                timeinterval={timeinterval}
                 dispatch={dispatch}
                 device={device}
                 key={device.deviceId}
@@ -96,12 +108,71 @@ function DeviceList(props) {
     return <ul>{deviceList}</ul>;
 }
 
+class IntervalSelector extends Component {
+    constructor(props) {
+        super(props)
+        this.dispatch = this.props.dispatch
+    }
+
+    render() {
+        return (
+            <div>
+                <Grid container spacing={0}>
+                    <Grid item xs={6}>
+                        <TextField
+                            id="filled-number"
+                            label="Number"
+                            type="number"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            margin="normal"
+                            value={this.props.timeinterval.value}
+                            onChange={(e) => {
+                                this.dispatch(setTimeInterval(e.target.value, this.props.timeinterval.unit))
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                            Time Unit
+                            </InputLabel>
+                        <Select
+                            labelId="demo-simple-select-placeholder-label-label"
+                            id="demo-simple-select-placeholder-label"
+                            value={this.props.timeinterval.unit}
+                            onChange={(e) => {
+                                this.dispatch(setTimeInterval(this.props.timeinterval.value, e.target.value))
+                            }}
+                        >
+                            <MenuItem value={"minutes"}>Minutes</MenuItem>
+                            <MenuItem value={"hours"}>Hours</MenuItem>
+                        </Select>
+                    </Grid>
+                </Grid>
+            </div>
+        )
+    }
+}
+
 class switchBoard extends Component {
+
+    constructor(props) {
+        super(props)
+    }
+
     componentDidMount() {
         console.log("Component mounted, loading devices");
 
         const { dispatch } = this.props;
         dispatch(fetchDevices());
+    }
+
+    handleClose() {
+        const { dispatch } = this.props;
+        dispatch({
+            type: "CLOSE_NOTIFICATION"
+        });
     }
 
     render() {
@@ -113,11 +184,35 @@ class switchBoard extends Component {
 
         return (
             <div className="swichboard">
-                {loadingBar}
-                <DeviceList
-                    dispatch={this.props.dispatch}
-                    devicelist={this.props.devicelist}
+                <Snackbar
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    open={this.props.notification.visible}
+                    onClose={(e) => {
+                        this.handleClose()
+                    }}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={this.props.notification.message}
                 />
+
+                {loadingBar}
+                <Grid container spacing={3}>
+                    <Grid item xs={6}>
+                        <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                            Time Interval
+                        </InputLabel>
+                        <IntervalSelector timeinterval={this.props.timeinterval} dispatch={this.props.dispatch}></IntervalSelector>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <DeviceList
+                            timeinterval={this.props.timeinterval}
+                            dispatch={this.props.dispatch}
+                            devicelist={this.props.devicelist}
+                        />
+                    </Grid>
+                </Grid>
             </div>
         );
     }
@@ -126,6 +221,8 @@ class switchBoard extends Component {
 //for every page you need a mapStateToProps for every component
 const mapStateToProps = state => {
     return {
+        notification: state.notification,
+        timeinterval: state.timeinterval,
         age: state.age,
         oven: state.oven,
         frontDoor: state.frontDoor,

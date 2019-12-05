@@ -2,7 +2,8 @@ import {
     DEVICE_STATE_CHANGE,
     GET_DEVICES,
     GET_HVAC_SETTINGS,
-    SET_HVAC_TEMP
+    SET_HVAC_TEMP,
+    TIME_INTERVAL_CHANGE
 } from '../actions'
 
 const reducer = (state, action) => {
@@ -40,15 +41,52 @@ const reducer = (state, action) => {
 
             let newDeviceState = mutatedDevice.state === "ON" ? true : false;
 
-            return {
-                ...state,
-                devices: {
-                    fetching: false,
-                    list: state.devices.list.map(device =>
-                        device.deviceId === mutatedDevice.deviceId ? { ...device, state: newDeviceState } : device
-                    )
+            console.log(mutatedDevice)
+
+            if (mutatedDevice.geninfo) {
+                return {
+                    ...state,
+                    devices: {
+                        fetching: false,
+                        list: state.devices.list.map(device =>
+                            device.deviceId === mutatedDevice.deviceId ? { ...device, state: newDeviceState } : device
+                        )
+                    },
+                    notification: {
+                        visible: true,
+                        message: "Device turned on and will use " + Math.round(mutatedDevice.geninfo.usage * 100) / 100 + " kWh"
+                    }
+                }
+            } else {
+                return {
+                    ...state,
+                    devices: {
+                        fetching: false,
+                        list: state.devices.list.map(device =>
+                            device.deviceId === mutatedDevice.deviceId ? { ...device, state: newDeviceState } : device
+                        )
+                    }
                 }
             }
+        case "CLOSE_NOTIFICATION":
+            return {
+                ...state,
+                notification: {
+                    visible: false,
+                    message: ""
+                }
+            }
+        case TIME_INTERVAL_CHANGE:
+            let value = action.value
+            let unit = action.unit
+            return {
+                ...state,
+                timeinterval: {
+                    value: value,
+                    unit: unit
+                }
+            }
+
         /* HERE ************** */
         case SET_HVAC_TEMP:
             return {
