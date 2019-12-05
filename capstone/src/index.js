@@ -33,6 +33,14 @@ const initialState = {
     low_f: 0,
     ext_f: 0,
     int_f: 0
+  },
+  timeinterval: {
+    value: 1,
+    unit: 'minutes'
+  },
+  notification: {
+    visible: false,
+    message: "Hello world"
   }
 };
 
