@@ -67,4 +67,4 @@ if __name__ == "__main__":
 
         geninstance = Generator.getInstance()
         geninstance.generate_locations_and_devices()
-        geninstance.home_usage(datetime(2019, 1, 1), datetime(2019, 12, 6))
+        geninstance.home_usage(datetime(2019, 8, 1), datetime(2019, 12, 6))

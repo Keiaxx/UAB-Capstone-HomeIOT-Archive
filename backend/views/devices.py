@@ -1,11 +1,15 @@
 # Contributor(s): Adrian Gose
 # If you worked on this file, add your name above so we can keep track of contributions
 
-from flask_restplus import Resource, fields
+from flask_restplus import Resource, fields, reqparse
 from views.api import api, devices_ns
+from models.device import Electric, Water
 from dao.device import get_devices, set_device_state, get_device_by_id, get_hvac_systems, set_hvac_systems
-
+from generate_functions import Generator
 from werkzeug.exceptions import BadRequest
+
+from datetime import datetime, timedelta
+import dateutil.parser
 
 
 device_model = api.model('Device', {
@@ -38,6 +42,7 @@ class Device(Resource):
         '''List all devices'''
         return get_devices()
 
+
 @devices_ns.route('/thermostat')
 class HVAC(Resource):
     '''Operations for HVAC systems'''
@@ -47,6 +52,7 @@ class HVAC(Resource):
     def get(self):
         '''Get current HVAC settings'''
         return get_hvac_systems()
+
 
 @devices_ns.route('/thermostat/<int:setf>/<int:highf>/<int:lowf>')
 @devices_ns.param('setf', 'The temperature setpoint')
@@ -66,6 +72,7 @@ class SetHVAC(Resource):
             print(e)
             return get_hvac_systems()
 
+
 @devices_ns.route('/<int:deviceid>')
 @devices_ns.param('deviceid', 'The deviceid to get')
 class SingleDevice(Resource):
@@ -77,9 +84,13 @@ class SingleDevice(Resource):
         '''Get a device by id'''
         return get_device_by_id(deviceid)
 
+
 @devices_ns.route('/<int:deviceid>/setstate/<string:state>')
 @devices_ns.param('state', 'The state to set the device. ON, OFF')
 @devices_ns.param('deviceid', 'The deviceid to mutate')
+@api.doc(params={
+    'end': 'End datetime in ISO format'
+})
 class DeviceMutation(Resource):
     '''Mutations for a specific device'''
 
@@ -90,14 +101,40 @@ class DeviceMutation(Resource):
             stateupper = state.upper()
             if stateupper == "ON" or stateupper == "OFF":
                 # TODO: DB Manipulate state
-                print(set_device_state(deviceid, state))
+                device = set_device_state(deviceid, state)
+
+                geninfo = None
+
+                # Logic to handle device state generation
+                if(stateupper == "ON"):
+                    # Check if device is electric type
+                    if issubclass(Electric, type(device)):
+                        print("Device is being set to ON and is electric")
+                        parser = reqparse.RequestParser()
+                        parser.add_argument('end')
+                        args = parser.parse_args()
+
+                        end = args['end']
+
+                        # Only process usage if end date is given
+                        if end is not None:
+                            end = dateutil.parser.parse(end)
+
+                            start_time = datetime.now()
+                            end_time = end.replace(tzinfo=None)
+                            print(start_time)
+                            print(end_time)
+                            geninstance = Generator.getInstance()
+                            geninfo = geninstance.on_demand_electric_usage(
+                                device, start_time, end_time)
+
                 return {
                     'state': state,
-                    'deviceid': deviceid
+                    'deviceid': deviceid,
+                    'geninfo': geninfo
                 }
             else:
                 raise BadRequest("Invalid state. Must be ON/OFF")
         else:
-            raise BadRequest("Invalid state. Must specify state and/or deviceid /did/setstate/ON")
-
-
+            raise BadRequest(
+                "Invalid state. Must specify state and/or deviceid /did/setstate/ON")
