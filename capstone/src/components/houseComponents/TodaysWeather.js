@@ -37,7 +37,7 @@ class Temp extends Component {
   render() {
 
     return (
-        <Grid container spacing={12}>
+        <Grid container>
 
           <Grid item xs={2}>
             Low:

@@ -33,5 +33,15 @@ const mapStateToProps = (state) => {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    age: state.age,
+    oven: state.oven,
+    frontDoor: state.frontDoor,
+    devices: state.devices,
+    devicelist: state.rawdevicelist,
+    hvac: state.hvac
+  };
+};
 
 export default connect(mapStateToProps)(House);

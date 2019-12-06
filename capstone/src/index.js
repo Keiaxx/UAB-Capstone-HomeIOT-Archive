@@ -27,6 +27,7 @@ const initialState = {
     fetching: false,
     list: []
   },
+  rawdevicelist: [],
   hvac: {
     set_f: 0,
     high_f: 0,
@@ -41,7 +42,8 @@ const initialState = {
   notification: {
     visible: false,
     message: "Hello world"
-  }
+  },
+  event_history: []
 };
 
 const store = createStore(

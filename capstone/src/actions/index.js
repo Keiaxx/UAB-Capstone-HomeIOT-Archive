@@ -17,6 +17,15 @@ function receiveDevices(json) {
   }
 }
 
+export const GET_EVENT_HISTORY = 'GET_EVENT_HISTORY'
+function receiveEventHistory(json) {
+  console.log("GET EVENT HISTORY DISPATCHED")
+  return {
+    type: GET_EVENT_HISTORY,
+    event_history: json,
+  }
+}
+
 export const GET_HVAC_SETTINGS = 'GET_HVAC_SETTINGS'
 function receiveHVACSettings(json) {
   console.log(json)
@@ -64,8 +73,10 @@ export function setDeviceState(deviceId, isOn, enddate) {
 
         error => console.log('An error occurred.', error)
       )
-      .then(json =>
-        dispatch(deviceStateChanged(json))
+      .then(json =>{
+          dispatch(deviceStateChanged(json))
+          dispatch(getEventHistory())
+        }
       )
   }
 }
@@ -75,7 +86,7 @@ export function fetchDevices() {
 
     dispatch(requestDevices())
 
-    return API.get(`device`)
+    return API.get(`location`)
       .then(
         response => response.data,
 
@@ -110,6 +121,22 @@ export function getHVAC() {
       )
       .then(json =>
         dispatch(receiveHVACSettings(json))
+      )
+  }
+}
+
+export function getEventHistory() {
+  return function (dispatch) {
+    console.log("Getting Event History")
+
+    return API.get(`usage/event_history`)
+      .then(
+        response => response.data,
+
+        error => console.log('An error occurred.', error)
+      )
+      .then(json =>
+        dispatch(receiveEventHistory(json))
       )
   }
 }

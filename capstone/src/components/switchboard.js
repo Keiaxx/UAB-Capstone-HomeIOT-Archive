@@ -5,9 +5,11 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
 
-import { fetchDevices, setDeviceState, setTimeInterval } from "../actions";
+import { fetchDevices, setDeviceState, setTimeInterval, getEventHistory } from "../actions";
 
 import * as moment from "moment";
+
+import { makeStyles } from '@material-ui/core/styles';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,41 +20,55 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
+import Toolbar from '@material-ui/core/Toolbar';
+import AppBar from '@material-ui/core/AppBar';
+
+var translation = {
+    "microwave": "電子レンジ",
+    "refrigerator": "冷蔵庫",
+    "stove": "レンジ",
+    "oven": "オーブン",
+    "dishwasher": "食器洗い機",
+    "kitchen_door": "キッチンドア",
+    "kitchen_window": "キッチン窓",
+    "main_hvac": "メイン",
+    "garage_door": "ガレージのドア",
+    "water_heater": "湯沸かし器",
+    "living_room_tv": "リビングルームテレビ",
+    "living_room_light": "リビングルームライト",
+    "main_door": "メインドア",
+    "livingroom_window": "リビングルーム窓",
+    "Bedroom1_light": "ベッドルーム1ライト",
+    "bedroom1_tv": "ベッドルーム1ライトテレビ",
+    "bedroom1_window": "ベッドルーム1窓",
+    "Bedroom2_light": "ベッドルーム2ライト",
+    "bedroom2_tv": "ベッドルーム2ライト",
+    "bedroom_window": "ベッドルーム2窓",
+    "bathroom1_exhaust_fan": "浴室排気1ファン",
+    "bathroom1_light": "浴室排気1",
+    "bathroom1_bath_water_meter": "浴室排気1",
+    "bathroom2_exhaust_fan": "浴室排気2ファン",
+    "bathroom2_light": "浴室排気2ライト",
+    "bathroom2_shower_water_meter": "浴室排気2水道メーター",
+    "washer": "洗濯機",
+    "washer_water_meter": "水道メーター",
+    "dryer": "ドライヤー",
+    "kitchen_light": "キッチンライト"
+}
 
 function DeviceItem(props) {
-
-    let translation = {
-        "microwave": "電子レンジ",
-        "refrigerator": "冷蔵庫",
-        "stove": "レンジ",
-        "oven": "オーブン",
-        "dishwasher": "食器洗い機",
-        "kitchen_door": "キッチンドア",
-        "kitchen_window": "キッチン窓",
-        "main_hvac": "メイン",
-        "garage_door": "ガレージのドア",
-        "water_heater": "湯沸かし器",
-        "living_room_tv": "リビングルームテレビ",
-        "living_room_light": "リビングルームライト",
-        "main_door": "メインドア",
-        "livingroom_window": "リビングルーム窓",
-        "Bedroom1_light": "ベッドルーム1ライト",
-        "bedroom1_tv": "ベッドルーム1ライトテレビ",
-        "bedroom1_window": "ベッドルーム1窓",
-        "Bedroom2_light": "ベッドルーム2ライト",
-        "bedroom2_tv": "ベッドルーム2ライト",
-        "bedroom_window": "ベッドルーム2窓",
-        "bathroom1_exhaust_fan": "浴室排気1ファン",
-        "bathroom1_light": "浴室排気1",
-        "bathroom1_bath_water_meter": "浴室排気1",
-        "bathroom2_exhaust_fan": "浴室排気2ファン",
-        "bathroom2_light": "浴室排気2ライト",
-        "bathroom2_shower_water_meter": "浴室排気2水道メーター",
-        "washer": "洗濯機",
-        "washer_water_meter": "水道メーター",
-        "dryer": "ドライヤー",
-        "kitchen_light": "キッチンライト"
-    }
 
     let [state, setState] = React.useState({
         checked: props.device.state,
@@ -75,17 +91,31 @@ function DeviceItem(props) {
 
 
     return (
-        <li>
-            Device: {props.device.name} / {translation[props.device.name]} |
-          <Switch
-                checked={state.checked}
-                onChange={handleDeviceStateChange(
-                    props.dispatch,
-                    props.device
-                )}
-            />
-            {props.device.state ? "ON" : "OFF"}
-        </li>
+        // <Grid xs={12}>
+        //   <Switch
+        //         checked={state.checked}
+        //         onChange={handleDeviceStateChange(
+        //             props.dispatch,
+        //             props.device
+        //         )}
+        //     />
+        //     {props.device.state ? "ON" : "OFF"}
+        // </Grid>
+
+        <TableRow key={props.device.name}>
+            <TableCell component="th" scope="row">
+                {props.device.name} / {translation[props.device.name]}
+            </TableCell>
+            <TableCell align="right">
+                <Switch
+                    checked={state.checked}
+                    onChange={handleDeviceStateChange(
+                        props.dispatch,
+                        props.device
+                    )}
+                />
+            </TableCell>
+        </TableRow>
     );
 }
 
@@ -105,7 +135,58 @@ function DeviceList(props) {
         );
     });
 
-    return <ul>{deviceList}</ul>;
+    return (
+        <Table aria-label="simple table">
+
+            <TableBody>
+                {deviceList}
+            </TableBody>
+        </Table>
+    );
+}
+
+const expansionStyles = makeStyles(theme => ({
+    root: {
+        width: '100%',
+    },
+    heading: {
+        fontSize: theme.typography.pxToRem(15),
+        fontWeight: theme.typography.fontWeightRegular,
+    },
+}));
+
+function LocationList(props) {
+    const classes = expansionStyles();
+    const timeinterval = props.timeinterval
+    const dispatch = props.dispatch;
+    const rawList = props.locationList;
+
+    const deviceList = rawList.map(location => {
+        console.log(location)
+        return (
+            <Grid item xs={12} key={location.name}>
+                <ExpansionPanel>
+                    <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography className={classes.heading}>{location.name}</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <DeviceList
+                            key={location.name}
+                            timeinterval={timeinterval}
+                            dispatch={dispatch}
+                            devicelist={location.devices}
+                        />
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
+            </Grid>
+        );
+    });
+
+    return deviceList;
 }
 
 class IntervalSelector extends Component {
@@ -155,6 +236,38 @@ class IntervalSelector extends Component {
     }
 }
 
+class EventHistory extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <Table aria-label="simple table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Date</TableCell>
+                        <TableCell align="right">Device Name</TableCell>
+                        <TableCell align="right">State</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {this.props.eventHistory.map((event) => {
+                        console.log("Mapping event " + event.device_name)
+                        return (
+                            <TableRow key={event.date}>
+                                <TableCell align="right">{event.date}</TableCell>
+                                <TableCell align="right">{event.device_name} / {translation[event.device_name]}</TableCell>
+                                <TableCell align="right">{event.state}</TableCell>
+                            </TableRow>
+                        )
+                    })}
+                </TableBody>
+            </Table>
+        )
+    }
+}
+
 class switchBoard extends Component {
 
     constructor(props) {
@@ -166,6 +279,7 @@ class switchBoard extends Component {
 
         const { dispatch } = this.props;
         dispatch(fetchDevices());
+        dispatch(getEventHistory())
     }
 
     handleClose() {
@@ -205,11 +319,37 @@ class switchBoard extends Component {
                         <IntervalSelector timeinterval={this.props.timeinterval} dispatch={this.props.dispatch}></IntervalSelector>
                     </Grid>
 
+                    <Grid item xs={6}></Grid>
+
                     <Grid item xs={6}>
-                        <DeviceList
+                        <AppBar position="static">
+                            <Toolbar variant="dense">
+                                <Typography variant="h6" >
+                                    Switch History
+                                </Typography>
+                            </Toolbar>
+                        </AppBar>
+
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <AppBar position="static">
+                            <Toolbar variant="dense">
+                                <Typography variant="h6" >
+                                    Device Switches
+                                </Typography>
+                            </Toolbar>
+                        </AppBar>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <EventHistory eventHistory={this.props.event_history} />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <LocationList
                             timeinterval={this.props.timeinterval}
                             dispatch={this.props.dispatch}
-                            devicelist={this.props.devicelist}
+                            locationList={this.props.devicelist}
                         />
                     </Grid>
                 </Grid>
@@ -227,7 +367,8 @@ const mapStateToProps = state => {
         oven: state.oven,
         frontDoor: state.frontDoor,
         devices: state.devices,
-        devicelist: state.devices.list
+        devicelist: state.devices.list,
+        event_history: state.event_history
     };
 };
 

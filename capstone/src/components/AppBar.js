@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +25,9 @@ export default function ButtonAppBar() {
     <div className={classes.root}>
       <AppBar position="fixed" style={{ margin: 0 }}>
         <Toolbar>
+        <Typography variant="h6" className={classes.title}>
+            HomeIOT
+        </Typography>
           <Button color='inherit' to='/' href='/'>Dashboard</Button>
           <Button color="inherit" to='/stats' href='/stats'>Stats </Button>
           <Button color="inherit" to='/switchboard' href='/switchboard'>Switch Board </Button>
