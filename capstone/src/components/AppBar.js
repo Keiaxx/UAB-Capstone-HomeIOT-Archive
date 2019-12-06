@@ -25,8 +25,9 @@ export default function ButtonAppBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" style={{ margin: 0 }}>
+      <AppBar position="fixed" style={{ margin: 0}}>
         <Toolbar>
+        <img src={require('../images/logo.png')} alt="Logo" height="100px"/>
         <Typography variant="h6" className={classes.title}>
             HomeIOT
         </Typography>
