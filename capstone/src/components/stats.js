@@ -189,6 +189,10 @@ class StatsPage extends Component {
       .then(data => {
         this.state.jpyusd = data["rates"]["JPY"]
         this.setState(this.state)
+      })
+      .catch(err => {
+        this.state.jpyusd = 108.72
+        this.setState(this.state)
       });
   }
 
