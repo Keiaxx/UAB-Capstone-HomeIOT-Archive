@@ -1,8 +1,16 @@
 Overview of code and their files
+  public
+    index.html  ------------> linked fonts and ui
+    manifest.json ----------> image template for front end
   src
     actions
       index.js  -------------> holds exported functions with their types 
     components
+        houseCompents
+          house.js ----------> house img to front end
+          todayswearher.js --> addition of internal and external temp montioring
+          lightbulb.jpg -----> lightbuld img to be sourced
+          overallview.png ---> floor plan of the house
         AppBar.js  ----------> basic styling of the nav bar
         dashboard.js  -------> holds inside and outside temps and layout of house
         manualButtons.js  ---> allows for manual interactions of sensors
@@ -17,7 +25,7 @@ Overview of code and their files
     index.css     -----------> basic template for front end addition
     index.js      -----------> holds the store and the allReducers so state can be accessed anywhere in app
     theme.js      -----------> basic material-ui template
-    
+  
     /***********************************************************************************************************/
     
     
