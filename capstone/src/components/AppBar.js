@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 
 import Typography from '@material-ui/core/Typography';
 
+import BugsDialog from './BugsDialog'
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -31,6 +33,7 @@ export default function ButtonAppBar() {
           <Button color='inherit' to='/' href='/'>Dashboard</Button>
           <Button color="inherit" to='/stats' href='/stats'>Stats </Button>
           <Button color="inherit" to='/switchboard' href='/switchboard'>Switch Board </Button>
+          <BugsDialog/>
         </Toolbar>
       </AppBar>
     </div>
