@@ -5,6 +5,7 @@ from datetime import datetime
 from flask_restplus import Resource, fields, reqparse
 from views.api import api, usage_ns
 from dao.usage import *
+from dao.events import get_last_10_events_formatted
 
 from werkzeug.exceptions import BadRequest
 
@@ -30,6 +31,16 @@ usage_schema = {
 }
 
 usage_model = api.model('UsageResponse', usage_schema)
+
+@usage_ns.route('/event_history')
+class UsageEventLog(Resource):
+    """Get an event history for the last 10 events"""
+
+    @api.doc(description='Get an event history for the last 10 events')
+    def get(self):
+        '''Get an event history for the last 10 events'''
+
+        return get_last_10_events_formatted()
 
 @usage_ns.route('/generate_next')
 class UsageGenerateNext(Resource):

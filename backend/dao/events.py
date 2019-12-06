@@ -62,3 +62,24 @@ def get_events() -> List[EventLog]:
     :return:
     """
     return EventLog.query.all()
+
+def get_last_10_events_formatted():
+    lastevents = EventLog.query.order_by(EventLog.eventId.desc()).limit(10).all()
+    print(lastevents)
+
+    eventlist = []
+
+    for event in lastevents:
+        date = event.date
+        state = event.state
+        device_name = event.device.name
+
+        eventlist.append({
+            'date': date.strftime('%Y-%m-%d %H:%M:%S'),
+            'state': state,
+            'temperature': event.temperature,
+            'device_name': device_name,
+            'deviceId': event.device.deviceId
+        })
+        
+    return eventlist
