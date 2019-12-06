@@ -3,7 +3,8 @@ import {
     GET_DEVICES,
     GET_HVAC_SETTINGS,
     SET_HVAC_TEMP,
-    TIME_INTERVAL_CHANGE
+    TIME_INTERVAL_CHANGE,
+    GET_EVENT_HISTORY,
 } from '../actions'
 
 const convertLocationDeviceArray = (devicesWithStateMappedToBoolean) => {
@@ -21,6 +22,13 @@ const reducer = (state, action) => {
     const newState = { ...state };
 
     switch (action.type) {
+        case GET_EVENT_HISTORY:
+            console.log("GET EVENT HISTORY STATE UPDATE")
+            console.log(action.event_history)
+            return {
+                ...state,
+                event_history: action.event_history
+            }
         case GET_HVAC_SETTINGS:
             return {
                 ...state,
