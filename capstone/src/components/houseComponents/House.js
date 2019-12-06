@@ -84,7 +84,7 @@ const mapStateToProps = state => {
     oven: state.oven,
     frontDoor: state.frontDoor,
     devices: state.devices,
-    devicelist: state.devices.list,
+    devicelist: state.rawdevicelist,
     hvac: state.hvac
   };
 };

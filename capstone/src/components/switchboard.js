@@ -9,6 +9,8 @@ import { fetchDevices, setDeviceState, setTimeInterval } from "../actions";
 
 import * as moment from "moment";
 
+import { makeStyles } from '@material-ui/core/styles';
+
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -18,6 +20,17 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 function DeviceItem(props) {
 
@@ -75,17 +88,31 @@ function DeviceItem(props) {
 
 
     return (
-        <li>
-            Device: {props.device.name} / {translation[props.device.name]} |
-          <Switch
+        // <Grid xs={12}>
+        //   <Switch
+        //         checked={state.checked}
+        //         onChange={handleDeviceStateChange(
+        //             props.dispatch,
+        //             props.device
+        //         )}
+        //     />
+        //     {props.device.state ? "ON" : "OFF"}
+        // </Grid>
+
+        <TableRow key={props.device.name}>
+            <TableCell component="th" scope="row">
+            {props.device.name} / {translation[props.device.name]}
+            </TableCell>
+            <TableCell align="right">
+            <Switch
                 checked={state.checked}
                 onChange={handleDeviceStateChange(
                     props.dispatch,
                     props.device
                 )}
             />
-            {props.device.state ? "ON" : "OFF"}
-        </li>
+            </TableCell>
+        </TableRow>
     );
 }
 
@@ -105,7 +132,58 @@ function DeviceList(props) {
         );
     });
 
-    return <ul>{deviceList}</ul>;
+    return (
+        <Table aria-label="simple table">
+
+            <TableBody>
+            {deviceList}
+            </TableBody>
+      </Table>
+    );
+}
+
+const expansionStyles = makeStyles(theme => ({
+    root: {
+      width: '100%',
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightRegular,
+    },
+  }));
+
+function LocationList(props) {
+    const classes = expansionStyles();
+    const timeinterval = props.timeinterval
+    const dispatch = props.dispatch;
+    const rawList = props.locationList;
+
+    const deviceList = rawList.map(location => {
+        console.log(location)
+        return (
+            <Grid item xs={12}>
+                <ExpansionPanel key={location.name}>
+                <ExpansionPanelSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <Typography className={classes.heading}>{location.name}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                        <DeviceList
+                                key={location.name}
+                                timeinterval={timeinterval}
+                                dispatch={dispatch}
+                                devicelist={location.devices}
+                        />
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+            </Grid>
+        );
+    });
+
+    return deviceList;
 }
 
 class IntervalSelector extends Component {
@@ -205,13 +283,13 @@ class switchBoard extends Component {
                         <IntervalSelector timeinterval={this.props.timeinterval} dispatch={this.props.dispatch}></IntervalSelector>
                     </Grid>
 
-                    <Grid item xs={6}>
-                        <DeviceList
+                    <Grid item xs={6}></Grid>
+
+                    <LocationList
                             timeinterval={this.props.timeinterval}
                             dispatch={this.props.dispatch}
-                            devicelist={this.props.devicelist}
-                        />
-                    </Grid>
+                            locationList={this.props.devicelist}
+                    />
                 </Grid>
             </div>
         );
