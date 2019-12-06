@@ -23,7 +23,17 @@ The application consists of three main components:
         - For example, getting graphing data in real time, along with price predictions using sklearn's LinearRegression models was made easy to use anywhere within the app using the usage DAO ([usage.py](backend/dao/usage.py#L174))
       - All historical weather data is obtained from the dark sky API and is preloaded into memory before data generation begins, to ensure speed and limit the number of API calls, as there is a limit.
 - Database (PostgreSQL)
+  - Hosted on the digitalocean vps instance, UAB database had some issues, not necessarily with the VPN/SSH Tunneling but the actual instance was not consistent
+  - Credentials if you need to peek into the db are below:
+    - ```
+        port: 5432
+        user: cs499
+        password: 4JCV4amp
+        database: cs499
+        ip: homeiot.gose.pw
+        ```
 - Frontend (React/Redux) found in the subfolder 'capstone'
+  - The axios library was used for all REST API Calls
 - DevOps related
     - Runs on a DigitalOcean VPS (Ubuntu 19)
     - Backend/Frontend are proxied through Nginx for SSL and vhost handling. Nginx config can be found [HERE](misc_configs/nginx_config)
