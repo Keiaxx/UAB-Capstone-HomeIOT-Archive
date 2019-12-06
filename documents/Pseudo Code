@@ -10,8 +10,13 @@ Overview of code and their files
     reducers
       counter.js  -----------> actions to increase or decreases the counter state
       index.js    -----------> combines all individual reducers
+    services
+      api.js      -----------> the plug
+    App.css       -----------> template for front end
     App.js        -----------> where "main" is located, calls components to be rendered 
+    index.css     -----------> basic template for front end addition
     index.js      -----------> holds the store and the allReducers so state can be accessed anywhere in app
+    theme.js      -----------> basic material-ui template
     
     /***********************************************************************************************************/
     
