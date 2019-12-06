@@ -40,7 +40,7 @@ function App() {
   //so dispatch is called with the increment() that is in the actions index.js
   //same for decrement()
   return (
-      <Container fixed maxWidth='false'>
+      <Container fixed>
         <AppBar/>
         <br/>
         <br/>       
