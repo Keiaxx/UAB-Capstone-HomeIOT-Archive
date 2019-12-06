@@ -33,7 +33,9 @@ The application consists of three main components:
         ip: homeiot.gose.pw
         ```
 - Frontend (React/Redux) found in the subfolder 'capstone'
-  - The axios library was used for all REST API Calls
+  - [Axios](https://github.com/axios/axios) library was used for all REST API Calls
+  - [Material-UI](https://material-ui.com/) was used as the view templating library
+  - [React-ApexChart](https://apexcharts.com/docs/react-charts/) was used for dynamic reactive charts
 - DevOps related
     - Runs on a DigitalOcean VPS (Ubuntu 19)
     - Backend/Frontend are proxied through Nginx for SSL and vhost handling. Nginx config can be found [HERE](misc_configs/nginx_config)
