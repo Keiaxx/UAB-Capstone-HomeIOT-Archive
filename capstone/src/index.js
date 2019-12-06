@@ -27,6 +27,7 @@ const initialState = {
     fetching: false,
     list: []
   },
+  rawdevicelist: [],
   hvac: {
     set_f: 0,
     high_f: 0,

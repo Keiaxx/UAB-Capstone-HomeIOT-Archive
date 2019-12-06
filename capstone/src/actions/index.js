@@ -75,7 +75,7 @@ export function fetchDevices() {
 
     dispatch(requestDevices())
 
-    return API.get(`device`)
+    return API.get(`location`)
       .then(
         response => response.data,
 

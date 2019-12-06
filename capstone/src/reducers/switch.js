@@ -6,6 +6,17 @@ import {
     TIME_INTERVAL_CHANGE
 } from '../actions'
 
+const convertLocationDeviceArray = (devicesWithStateMappedToBoolean) => {
+    return devicesWithStateMappedToBoolean.reduce((acc, location) => {
+        let dlist = []
+        location.devices.map(device => {
+            dlist.push(device)
+        })
+        acc = acc.concat(dlist)
+        return acc
+      }, [])
+}
+
 const reducer = (state, action) => {
     const newState = { ...state };
 
@@ -19,21 +30,31 @@ const reducer = (state, action) => {
 
             if (action.devices) state.devices.list = action.devices
 
-            let devicesWithStateMappedToBoolean = state.devices.list.map((el) => {
-                if (el.state === "ON") {
-                    el.state = true
-                } else {
-                    el.state = false
-                }
-                return el
+            let devicesWithStateMappedToBoolean = state.devices.list.map((locationdevices) => {
+                locationdevices.devices = locationdevices.devices.map((el) => {
+                    if (el.state === "ON") {
+                        el.state = true
+                    } else {
+                        el.state = false
+                    }
+                    return el
+                })
+                return locationdevices
             })
+
+            let rawdevicelist = convertLocationDeviceArray(devicesWithStateMappedToBoolean)
+
+            console.log("RAW DEVICE LIST")
+
+            console.log(rawdevicelist)
 
             return {
                 ...state,
                 devices: {
                     fetching: action.fetching,
                     list: devicesWithStateMappedToBoolean
-                }
+                },
+                rawdevicelist: rawdevicelist
             }
         case DEVICE_STATE_CHANGE:
             let mutatedDevice = action.device
@@ -43,15 +64,18 @@ const reducer = (state, action) => {
 
             console.log(mutatedDevice)
 
+            let deviceMapped = state.devices.list.map(device =>
+                device.deviceId === mutatedDevice.deviceId ? { ...device, state: newDeviceState } : device
+            )
+
             if (mutatedDevice.geninfo) {
                 return {
                     ...state,
                     devices: {
                         fetching: false,
-                        list: state.devices.list.map(device =>
-                            device.deviceId === mutatedDevice.deviceId ? { ...device, state: newDeviceState } : device
-                        )
+                        list: deviceMapped
                     },
+                    rawdevicelist: convertLocationDeviceArray(deviceMapped),
                     notification: {
                         visible: true,
                         message: "Device turned on and will use " + Math.round(mutatedDevice.geninfo.usage * 100) / 100 + " kWh"
@@ -62,10 +86,9 @@ const reducer = (state, action) => {
                     ...state,
                     devices: {
                         fetching: false,
-                        list: state.devices.list.map(device =>
-                            device.deviceId === mutatedDevice.deviceId ? { ...device, state: newDeviceState } : device
-                        )
-                    }
+                        list: deviceMapped
+                    },
+                    rawdevicelist: convertLocationDeviceArray(deviceMapped),
                 }
             }
         case "CLOSE_NOTIFICATION":
